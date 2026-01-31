@@ -32,7 +32,7 @@ public class LaptopService {
         void onResult(int totalPage, int count);
     }
     public void getAllLaptop(int loai, int page, int limit, LaptopService.PageCallback callback) {
-        String url = Configure.URL_DT + "?category=" + loai + "&page=" + page + "&limit=" + limit;;
+        String url = Configure.URL_CATEGORY + "?category=" + loai + "&page=" + page + "&limit=" + limit;;
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,

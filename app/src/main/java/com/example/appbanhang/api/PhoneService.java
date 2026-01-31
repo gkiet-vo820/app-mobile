@@ -32,7 +32,7 @@ public class PhoneService {
         void onResult(int totalPage, int count);
     }
     public void getAllDienThoai(int loai, int page, int limit, PageCallback callback) {
-        String url = Configure.URL_DT + "?category=" + loai + "&page=" + page + "&limit=" + limit;;
+        String url = Configure.URL_CATEGORY + "?category=" + loai + "&page=" + page + "&limit=" + limit;;
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
                 url,

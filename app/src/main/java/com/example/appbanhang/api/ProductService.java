@@ -31,7 +31,7 @@ public class ProductService {
     public void getAllSanPham() {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Configure.URL_SP,
+                Configure.URL_PRODUCT,
                 null,
                 response -> {
                     try {

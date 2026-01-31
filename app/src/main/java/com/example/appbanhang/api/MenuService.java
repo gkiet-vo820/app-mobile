@@ -28,7 +28,7 @@ public class MenuService {
     public void getAllLoaiSanPham() {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                Configure.URL_LOAISP,
+                Configure.URL_MENU,
                 null,
                 response -> {
                     try {
