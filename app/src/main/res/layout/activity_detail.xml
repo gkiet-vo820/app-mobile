@@ -14,7 +14,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Chi tiết sản phẩm"
-        android:background="#0fbcf9">
+        android:background="#ff00dfff">
 
         <FrameLayout
             android:id="@+id/frameLayoutGioHang"

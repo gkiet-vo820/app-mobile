@@ -25,7 +25,7 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:title="Giỏ hàng"
-        android:background="#0fbcf9"
+        android:background="#ff00dfff"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
