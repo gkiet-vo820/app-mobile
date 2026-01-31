@@ -1,15 +1,24 @@
 package com.example.appbanhang.model;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class Product implements Serializable {
     private int id;
+    @SerializedName("name")
     private String tensp;
+    @SerializedName("price")
     private double gia;
+    @SerializedName("image")
     private String hinhanh;
+    @SerializedName("description")
     private String mota;
+    @SerializedName("category")
     private int loai;
+    @SerializedName("createdAt")
     private String ngaytao;
+    @SerializedName("soldQuantity")
     private int soluongban;
 
     public Product(int id, String tensp, double gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {

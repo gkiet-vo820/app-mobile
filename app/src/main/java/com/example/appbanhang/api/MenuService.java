@@ -3,61 +3,46 @@ package com.example.appbanhang.api;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.example.appbanhang.adapter.MenuAdapter;
 import com.example.appbanhang.model.Menu;
-import com.example.appbanhang.util.Configure;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
+import io.reactivex.rxjava3.disposables.CompositeDisposable;
+import io.reactivex.rxjava3.schedulers.Schedulers;
+
 
 public class MenuService {
-    private RequestQueue requestQueue;
+    private ProductApi productApi;
     private Context context;
     private MenuAdapter adapter;
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public MenuService(Context context, MenuAdapter adapter) {
         this.context = context;
         this.adapter = adapter;
-        this.requestQueue = Volley.newRequestQueue(context);
+        productApi = RetrofitClient.getInstance().create(ProductApi.class);
     }
 
     public void getAllLoaiSanPham() {
-        JsonObjectRequest request = new JsonObjectRequest(
-                Request.Method.GET,
-                Configure.URL_MENU,
-                null,
-                response -> {
-                    try {
-                        if (response.getBoolean("success")) {
-                            JSONArray array = response.getJSONArray("data");
-
-                            adapter.clear();
-                            for (int i = 0; i < array.length(); i++) {
-                                JSONObject obj = array.getJSONObject(i);
-                                adapter.add(new Menu(
-                                        obj.getInt("id"),
-                                        obj.getString("name"),
-                                        obj.getString("image")
-                                ));
-                            }
-                            adapter.notifyDataSetChanged();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(context, "Lỗi parse", Toast.LENGTH_SHORT).show();
-                    }
-                },
-                error -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+        compositeDisposable.add(
+                productApi.getAllMenu()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                res -> {
+                                    if (res.isSuccess()) {
+                                        adapter.clear();
+                                        for (Menu menu : res.getData()) {
+                                            adapter.add(menu);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                },
+                                err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+                        )
         );
-
-        requestQueue.add(request);
-
     }
-
-
-
+    public void clear() {
+        compositeDisposable.clear();
+    }
 }

@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">AppBanHang</string>
     <string name="dangki"><u>Đăng ký</u></string>
+
+    <string name="hoantat"><u>Hoàn tất</u></string>
+    <string name="chinhsua"><u>Chỉnh sửa</u></string>
 </resources>

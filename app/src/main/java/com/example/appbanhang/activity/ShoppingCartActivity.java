@@ -87,16 +87,17 @@ public class ShoppingCartActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+                setActiveButton(btnMuaHang);
             }
         });
 
         txtChinhSua.setOnClickListener(v -> {
             isEditing = !isEditing;
             if (isEditing) {
-                txtChinhSua.setText("Hoàn tất");
+                txtChinhSua.setText(R.string.hoantat);
                 if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(true);
             } else {
-                txtChinhSua.setText("Chỉnh sửa");
+                txtChinhSua.setText(R.string.chinhsua);
                 if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(false);
             }
         });
@@ -111,6 +112,14 @@ public class ShoppingCartActivity extends AppCompatActivity {
         txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
     }
 
+    private void setActiveButton(Button button) {
+        btnMuaHang.setBackgroundResource(R.drawable.button_inactive);
+
+        btnMuaHang.setTextColor(getColor(android.R.color.black));
+
+        button.setBackgroundResource(R.drawable.button_active);
+        button.setTextColor(getColor(android.R.color.white));
+    }
     @Override
     protected void onStart() {
         super.onStart();

@@ -1,4 +1,4 @@
-package com.example.appbanhang;
+package com.example.appbanhang.adapter;
 
 import android.view.View;
 

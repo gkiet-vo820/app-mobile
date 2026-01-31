@@ -57,17 +57,6 @@ public class LaptopActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
     private void addControls(){
         toolBarLaptop = findViewById(R.id.toolBarLaptop);
         recyclerViewLaptop = findViewById(R.id.recyclerViewLaptop);
@@ -82,6 +71,11 @@ public class LaptopActivity extends AppCompatActivity {
         laptopService = new LaptopService(this,laptopAdapter, dsProduct);
 
 
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        laptopService.clear();
     }
 
     private void addEvents(){

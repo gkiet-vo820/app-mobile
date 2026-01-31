@@ -12,7 +12,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.appbanhang.ItemClickListener;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
 import com.example.appbanhang.model.Product;

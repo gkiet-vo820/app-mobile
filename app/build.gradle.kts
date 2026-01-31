@@ -45,21 +45,18 @@ dependencies {
     implementation("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
-    //volley
-    implementation("com.android.volley:volley:1.2.1")
-
     //badge
     implementation("com.nex3z:notification-badge:1.0.4")
 
     //event bus
     implementation("org.greenrobot:eventbus:3.2.0")
 
-//    //Rxjava
-//    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
-//    implementation("io.reactivex.rxjava3:rxjava:3.0.0")
-//
-//    //Retrofit
-//    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-//    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-//    implementation("com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0")
+    //Rxjava
+    implementation("io.reactivex.rxjava3:rxandroid:3.0.0")
+    implementation("io.reactivex.rxjava3:rxjava:3.0.0")
+
+    //Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0")
 }

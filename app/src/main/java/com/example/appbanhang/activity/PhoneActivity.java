@@ -56,17 +56,7 @@ public class PhoneActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            Intent intent = new Intent(this, MainActivity.class);
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
+
     private void addControls(){
         toolBarDienThoai = findViewById(R.id.toolBarDienThoai);
         recyclerViewDienThoai = findViewById(R.id.recyclerViewDienThoai);
@@ -80,7 +70,11 @@ public class PhoneActivity extends AppCompatActivity {
         //recyclerViewDienThoai.setLayoutManager(new GridLayoutManager(this,1));
         phoneService = new PhoneService(this, phoneAdapter, dsProduct);
 
+    }
 
+    protected void onDestroy() {
+        super.onDestroy();
+        phoneService.clear();
     }
 
     private void addEvents(){

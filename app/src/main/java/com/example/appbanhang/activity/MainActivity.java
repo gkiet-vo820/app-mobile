@@ -152,6 +152,12 @@ public class MainActivity extends AppCompatActivity {
         notificationBadge.setText(String.valueOf(totalItem));
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        menuService.clear();
+    }
+
     private void addEvents(){
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -183,6 +189,12 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                showListSanPham();
                setActiveButton(btnSanPhamMoiNhat);
+
+            }
+        });
+        btnSanPhamBanChay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
             }
         });

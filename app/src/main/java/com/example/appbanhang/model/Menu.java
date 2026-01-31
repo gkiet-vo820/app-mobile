@@ -1,8 +1,12 @@
 package com.example.appbanhang.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Menu {
     private int id;
+    @SerializedName("name")
     private String tensanpham;
+    @SerializedName("image")
     private String hinhanh;
 
     public Menu(int id, String tensanpham, String hinhanh) {

@@ -14,7 +14,7 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
         app:title="Laptop"
-        android:background="#b2b4c1">
+        android:background="#0fbcf9">
     </androidx.appcompat.widget.Toolbar>
 
     <androidx.recyclerview.widget.RecyclerView

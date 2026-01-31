@@ -25,14 +25,14 @@
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
         app:title="Giỏ hàng"
-        android:background="#36dd07"
+        android:background="#0fbcf9"
         app:layout_constraintTop_toTopOf="parent">
 
         <TextView
             android:id="@+id/txtChinhSua"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Chỉnh sửa"
+            android:text="@string/chinhsua"
             android:textSize="20sp"
             android:textStyle="italic"
             android:layout_gravity="right|center"

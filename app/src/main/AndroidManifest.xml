@@ -15,7 +15,7 @@
         android:theme="@style/Theme.AppBanHang"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true" />
         <activity
             android:name=".activity.RegisterActivity"
@@ -33,7 +33,7 @@
             android:name=".activity.PhoneActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
