@@ -8,7 +8,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.appbanhang.adapter.MenuAdapter;
-import com.example.appbanhang.model.LoaiSp;
+import com.example.appbanhang.model.Menu;
 import com.example.appbanhang.util.Configure;
 
 import org.json.JSONArray;
@@ -38,7 +38,7 @@ public class MenuService {
                             adapter.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
-                                adapter.add(new LoaiSp(
+                                adapter.add(new Menu(
                                         obj.getInt("id"),
                                         obj.getString("name"),
                                         obj.getString("image")

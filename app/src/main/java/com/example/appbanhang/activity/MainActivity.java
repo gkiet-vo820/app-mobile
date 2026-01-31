@@ -24,11 +24,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.MenuAdapter;
-import com.example.appbanhang.adapter.SanPhamAdapter;
+import com.example.appbanhang.adapter.ProductAdapter;
 import com.example.appbanhang.api.MenuService;
-import com.example.appbanhang.api.SanPhamService;
-import com.example.appbanhang.model.LoaiSp;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.api.ProductService;
+import com.example.appbanhang.model.Menu;
+import com.example.appbanhang.model.Product;
 import com.example.appbanhang.util.Utils;
 import com.google.android.material.navigation.NavigationView;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -47,13 +47,13 @@ public class MainActivity extends AppCompatActivity {
     Button btnSanPhamMoiNhat, btnSanPhamBanChay;
 
     MenuAdapter menuAdapter;
-    List<LoaiSp> dsLoaiSp;
+    List<Menu> dsMenu;
     MenuService menuService;
 
 
-    SanPhamAdapter sanPhamAdapter;
-    List<SanPham> dsSanPham;
-    SanPhamService sanPhamService;
+    ProductAdapter productAdapter;
+    List<Product> dsProduct;
+    ProductService productService;
 
 
     NotificationBadge notificationBadge;
@@ -112,30 +112,30 @@ public class MainActivity extends AppCompatActivity {
         navigaionView = findViewById(R.id.navigaionView);
 
         listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
-        dsLoaiSp = new ArrayList<>();
-        menuAdapter = new MenuAdapter(this,dsLoaiSp);
+        dsMenu = new ArrayList<>();
+        menuAdapter = new MenuAdapter(this, dsMenu);
         listViewManHinhChinh.setAdapter(menuAdapter);
         menuService = new MenuService(this, menuAdapter);
 
-        dsSanPham = new ArrayList<>();
-        sanPhamAdapter = new SanPhamAdapter(this, dsSanPham);
+        dsProduct = new ArrayList<>();
+        productAdapter = new ProductAdapter(this, dsProduct);
         recyclerViewManHinhChinh.setLayoutManager(new GridLayoutManager(this,2));
 
-        recyclerViewManHinhChinh.setAdapter(sanPhamAdapter);
-        sanPhamService = new SanPhamService(this,sanPhamAdapter,dsSanPham);
+        recyclerViewManHinhChinh.setAdapter(productAdapter);
+        productService = new ProductService(this, productAdapter, dsProduct);
 
         btnSanPhamMoiNhat = findViewById(R.id.btnSanPhamMoiNhat);
         btnSanPhamBanChay = findViewById(R.id.btnSanPhamBanChay);
 
         notificationBadge = findViewById(R.id.menuSoLuong);
         frameLayoutManHinhChinh = findViewById(R.id.frameLayoutManHinhChinh);
-        if(Utils.dsGioHang == null){
-            Utils.dsGioHang = new ArrayList<>();
+        if(Utils.dsShoppingCart == null){
+            Utils.dsShoppingCart = new ArrayList<>();
         }
         else{
             int totalItem = 0;
-            for(int i = 0; i < Utils.dsGioHang.size(); i++){
-                totalItem += Utils.dsGioHang.get(i).getSoluong();
+            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
+                totalItem += Utils.dsShoppingCart.get(i).getSoluong();
             }
             notificationBadge.setText(String.valueOf(totalItem));
         }
@@ -146,8 +146,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         int totalItem = 0;
-        for(int i = 0; i < Utils.dsGioHang.size(); i++){
-            totalItem += Utils.dsGioHang.get(i).getSoluong();
+        for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
+            totalItem += Utils.dsShoppingCart.get(i).getSoluong();
         }
         notificationBadge.setText(String.valueOf(totalItem));
     }
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity {
                         startActivity(trangchu);
                         break;
                     case 1:
-                        Intent dienthoai  = new Intent(MainActivity.this,DienThoaiActivity.class);
+                        Intent dienthoai  = new Intent(MainActivity.this, PhoneActivity.class);
                         dienthoai.putExtra("loai", 1);
                         startActivity(dienthoai);
                         break;
@@ -190,7 +190,7 @@ public class MainActivity extends AppCompatActivity {
         frameLayoutManHinhChinh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gioHang = new Intent(MainActivity.this, GioHangActivity.class);
+                Intent gioHang = new Intent(MainActivity.this, ShoppingCartActivity.class);
                 startActivity(gioHang);
             }
         });
@@ -209,6 +209,6 @@ public class MainActivity extends AppCompatActivity {
         menuService.getAllLoaiSanPham();
     }
     private void showListSanPham(){
-        sanPhamService.getAllSanPham();
+        productService.getAllSanPham();
     }
 }

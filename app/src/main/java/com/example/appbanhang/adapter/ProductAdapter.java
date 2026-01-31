@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,20 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.ItemClickListener;
 import com.example.appbanhang.R;
-import com.example.appbanhang.activity.ChiTietActivity;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.model.Product;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MyViewHolder> {
+public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHolder> {
 
     Context context;
-    List<SanPham> dsSanPham;
+    List<Product> dsProduct;
 
-    public SanPhamAdapter(Context context, List<SanPham> dsSanPham) {
+    public ProductAdapter(Context context, List<Product> dsProduct) {
         this.context = context;
-        this.dsSanPham = dsSanPham;
+        this.dsProduct = dsProduct;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
@@ -57,30 +56,30 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MyViewHo
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_sanpham,parent,false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_product,parent,false);
         return  new MyViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        SanPham sanPham = dsSanPham.get(position);
-        holder.txtTenSp.setText(sanPham.getTensp());
+        Product product = dsProduct.get(position);
+        holder.txtTenSp.setText(product.getTensp());
 
-        String gia = String.valueOf(sanPham.getGia());
+        String gia = String.valueOf(product.getGia());
         if (gia != null && !gia.isEmpty()) {
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             holder.txtGiaSp.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
         } else {
             holder.txtGiaSp.setText("Giá: đang cập nhật");
         }
-        Glide.with(context).load(sanPham.getHinhanh()).into(holder.imgSp);
+        Glide.with(context).load(product.getHinhanh()).into(holder.imgSp);
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
                 if(!isLongClick){
-                    Intent intent = new Intent(context, ChiTietActivity.class);
-                    intent.putExtra("chitiet", sanPham);
+                    Intent intent = new Intent(context, DetailActivity.class);
+                    intent.putExtra("chitiet", product);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
@@ -90,7 +89,7 @@ public class SanPhamAdapter extends RecyclerView.Adapter<SanPhamAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return dsSanPham.size();
+        return dsProduct.size();
     }
 
 

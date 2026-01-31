@@ -15,22 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.ItemClickListener;
 import com.example.appbanhang.R;
-import com.example.appbanhang.activity.ChiTietActivity;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.model.Product;
 
 import java.text.DecimalFormat;
 import java.util.List;
 
 public class LaptopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     Context context;
-    List<SanPham> dsSanPham;
+    List<Product> dsProduct;
 
     private static final int VIEW_TYPE_DATA = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
-    public LaptopAdapter(Context context, List<SanPham> dsSanPham) {
+    public LaptopAdapter(Context context, List<Product> dsProduct) {
         this.context = context;
-        this.dsSanPham = dsSanPham;
+        this.dsProduct = dsProduct;
     }
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder{
@@ -80,9 +80,9 @@ public class LaptopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyViewHolder){
             MyViewHolder myViewHolder = (MyViewHolder) holder;
-            SanPham sanPham = dsSanPham.get(position);
-            myViewHolder.txtTenSpLT.setText(sanPham.getTensp());
-            String gia = String.valueOf(sanPham.getGia());
+            Product product = dsProduct.get(position);
+            myViewHolder.txtTenSpLT.setText(product.getTensp());
+            String gia = String.valueOf(product.getGia());
             if(gia != null && !gia.isEmpty()){
                 DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                 myViewHolder.txtGiaSpLT.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
@@ -90,14 +90,14 @@ public class LaptopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             else{
                 myViewHolder.txtGiaSpLT.setText("Giá đang được cập nhật");
             }
-            myViewHolder.txtMoTaSpLT.setText("Mô tả: " + sanPham.getMota());
-            Glide.with(context).load(sanPham.getHinhanh()).into(myViewHolder.imgLaptop);
+            myViewHolder.txtMoTaSpLT.setText("Mô tả: " + product.getMota());
+            Glide.with(context).load(product.getHinhanh()).into(myViewHolder.imgLaptop);
             myViewHolder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if(!isLongClick){
-                        Intent intent = new Intent(context, ChiTietActivity.class);
-                        intent.putExtra("chitiet", sanPham);
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("chitiet", product);
 //                        intent.putExtra("loai",2);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -113,11 +113,11 @@ public class LaptopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        return dsSanPham.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
+        return dsProduct.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
     }
 
     @Override
     public int getItemCount() {
-        return dsSanPham.size();
+        return dsProduct.size();
     }
 }

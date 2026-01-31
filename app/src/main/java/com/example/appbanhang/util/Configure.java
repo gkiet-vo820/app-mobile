@@ -1,9 +1,5 @@
 package com.example.appbanhang.util;
 
-import com.example.appbanhang.model.GioHang;
-
-import java.util.List;
-
 public class Configure {
 //    public static String URL_GET = "http://192.168.1.45:8080/api/sanpham/demobanhang/get_sanpham.php";
 

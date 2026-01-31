@@ -1,10 +1,10 @@
 package com.example.appbanhang.util;
 
-import com.example.appbanhang.model.GioHang;
+import com.example.appbanhang.model.ShoppingCart;
 
 import java.util.List;
 
 public class Utils {
-    public static List<GioHang> dsGioHang;
+    public static List<ShoppingCart> dsShoppingCart;
 
 }

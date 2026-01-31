@@ -18,22 +18,22 @@
             android:name=".activity.MainActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.DangKiActivity"
+            android:name=".activity.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.GioHangActivity"
+            android:name=".activity.ShoppingCartActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.ChiTietActivity"
+            android:name=".activity.DetailActivity"
             android:exported="true" />
         <activity
             android:name=".activity.LaptopActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.DienThoaiActivity"
+            android:name=".activity.PhoneActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.DangNhapActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

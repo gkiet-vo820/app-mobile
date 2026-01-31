@@ -5,29 +5,29 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.DangKiActivity">
+    tools:context=".activity.LoginActivity">
 
     <TextView
-        android:id="@+id/txtDangKy"
+        android:id="@+id/txtDangNhap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="ĐĂNG KÝ"
+        android:text="ĐĂNG NHẬP"
         android:textStyle="bold"
         android:textSize="26sp"
         android:textColor="#74b9ff"
         android:gravity="center"
         android:padding="5dp"
         android:layout_marginTop="10dp"/>
-
+    
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/line1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/txtDangKy"
+        app:layout_constraintTop_toBottomOf="@id/txtDangNhap"
         android:layout_marginTop="5dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
+        
         <com.google.android.material.textfield.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,37 +58,38 @@
             android:drawableLeft="@drawable/ic_equal"/>
     </com.google.android.material.textfield.TextInputLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/line3"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/line2"
-        android:layout_marginTop="5dp"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:drawablePadding="5dp"
-            android:drawableLeft="@drawable/ic_equal"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnDangNhap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/line3"
-        android:text="Đăng ký"
+        app:layout_constraintTop_toBottomOf="@id/line2"
+        android:text="Đăng nhập"
         android:background="#81ecec"
         android:textColor="@color/white"
         android:layout_marginRight="25dp"
         android:layout_marginLeft="25dp"
         android:layout_marginTop="10dp"/>
 
-
-
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btnDangNhap"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nếu chưa có tài khoản?"
+            android:textSize="16sp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/dangki"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/holo_blue_dark"
+            android:layout_marginLeft="10dp"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

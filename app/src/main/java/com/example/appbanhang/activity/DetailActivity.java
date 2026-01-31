@@ -2,7 +2,6 @@ package com.example.appbanhang.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -14,21 +13,17 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
-import com.example.appbanhang.model.GioHang;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.model.ShoppingCart;
+import com.example.appbanhang.model.Product;
 import com.example.appbanhang.util.Utils;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.text.DecimalFormat;
-import java.util.List;
 
-public class ChiTietActivity extends AppCompatActivity {
+public class DetailActivity extends AppCompatActivity {
     Toolbar toolBarChiTietSP;
     TextView txtTenChiTietSP, txtGiaChiTietSP, txtMoTaChiTietSP;
     ImageView imgChiTietSP;
@@ -36,7 +31,7 @@ public class ChiTietActivity extends AppCompatActivity {
     Spinner spinner;
     FrameLayout frameLayoutGioHang;
 
-    SanPham sanPham;
+    Product product;
     int loai;
 
     NotificationBadge notificationBadge;
@@ -45,7 +40,7 @@ public class ChiTietActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_chi_tiet);
+        setContentView(R.layout.activity_detail);
         addControls();
         ActionBar();
         getIntentData();
@@ -54,9 +49,9 @@ public class ChiTietActivity extends AppCompatActivity {
 
     private void getIntentData(){
         Intent intent = getIntent();
-        sanPham = (SanPham) intent.getSerializableExtra("chitiet");
-        txtTenChiTietSP.setText(sanPham.getTensp());
-        String gia = String.valueOf(sanPham.getGia());
+        product = (Product) intent.getSerializableExtra("chitiet");
+        txtTenChiTietSP.setText(product.getTensp());
+        String gia = String.valueOf(product.getGia());
         if(gia != null && !gia.isEmpty()){
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
             txtGiaChiTietSP.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
@@ -64,8 +59,8 @@ public class ChiTietActivity extends AppCompatActivity {
         else{
             txtGiaChiTietSP.setText("Giá đang được cập nhật");
         }
-        txtMoTaChiTietSP.setText(sanPham.getMota());
-        Glide.with(this).load(sanPham.getHinhanh()).into(imgChiTietSP);
+        txtMoTaChiTietSP.setText(product.getMota());
+        Glide.with(this).load(product.getHinhanh()).into(imgChiTietSP);
         Integer[] so = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
         ArrayAdapter<Integer> adapterSpinner = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item, so);
         spinner.setAdapter(adapterSpinner);
@@ -129,61 +124,61 @@ public class ChiTietActivity extends AppCompatActivity {
         frameLayoutGioHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent gioHang =  new Intent(ChiTietActivity.this, GioHangActivity.class);
+                Intent gioHang =  new Intent(DetailActivity.this, ShoppingCartActivity.class);
                 startActivity(gioHang);
             }
         });
-        if(Utils.dsGioHang != null){
+        if(Utils.dsShoppingCart != null){
             int totalItem = 0;
-            for(int i = 0; i < Utils.dsGioHang.size(); i++){
-                totalItem += Utils.dsGioHang.get(i).getSoluong();
+            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
+                totalItem += Utils.dsShoppingCart.get(i).getSoluong();
             }
             notificationBadge.setText(String.valueOf(totalItem));
         }
     }
 
     private void themGioHang(){
-        if(Utils.dsGioHang.size() > 0){
+        if(Utils.dsShoppingCart.size() > 0){
             boolean flag = false;
             int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-            for(int i = 0; i < Utils.dsGioHang.size(); i++){
-                if(Utils.dsGioHang.get(i).getId() == sanPham.getId()){
-                    Utils.dsGioHang.get(i).setSoluong(soluong + Utils.dsGioHang.get(i).getSoluong());
-                    double gia = sanPham.getGia() * Utils.dsGioHang.get(i).getSoluong();
-                    Utils.dsGioHang.get(i).setGiasp(gia);
+            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
+                if(Utils.dsShoppingCart.get(i).getId() == product.getId()){
+                    Utils.dsShoppingCart.get(i).setSoluong(soluong + Utils.dsShoppingCart.get(i).getSoluong());
+                    double gia = product.getGia() * Utils.dsShoppingCart.get(i).getSoluong();
+                    Utils.dsShoppingCart.get(i).setGiasp(gia);
                     flag = true;
                 }
             }
             if(flag == false){
-                double gia = sanPham.getGia() * soluong;
-                GioHang gioHang = new GioHang();
-                gioHang.setTensp(sanPham.getTensp());
-                gioHang.setGiasp(gia);
-                gioHang.setHinhsp(sanPham.getHinhanh());
-                gioHang.setSoluong(soluong);
-                Utils.dsGioHang.add(gioHang);
+                double gia = product.getGia() * soluong;
+                ShoppingCart shoppingCart = new ShoppingCart();
+                shoppingCart.setTensp(product.getTensp());
+                shoppingCart.setGiasp(gia);
+                shoppingCart.setHinhsp(product.getHinhanh());
+                shoppingCart.setSoluong(soluong);
+                Utils.dsShoppingCart.add(shoppingCart);
             }
         }
         else{
             int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-            double gia = sanPham.getGia() * soluong;
-            GioHang gioHang = new GioHang();
-            gioHang.setTensp(sanPham.getTensp());
-            gioHang.setGiasp(gia);
-            gioHang.setHinhsp(sanPham.getHinhanh());
-            gioHang.setSoluong(soluong);
-            Utils.dsGioHang.add(gioHang);
+            double gia = product.getGia() * soluong;
+            ShoppingCart shoppingCart = new ShoppingCart();
+            shoppingCart.setTensp(product.getTensp());
+            shoppingCart.setGiasp(gia);
+            shoppingCart.setHinhsp(product.getHinhanh());
+            shoppingCart.setSoluong(soluong);
+            Utils.dsShoppingCart.add(shoppingCart);
         }
-        notificationBadge.setText(String.valueOf(Utils.dsGioHang.size()));
+        notificationBadge.setText(String.valueOf(Utils.dsShoppingCart.size()));
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(Utils.dsGioHang != null){
+        if(Utils.dsShoppingCart != null){
             int totalItem = 0;
-            for(int i = 0; i < Utils.dsGioHang.size(); i++){
-                totalItem += Utils.dsGioHang.get(i).getSoluong();
+            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
+                totalItem += Utils.dsShoppingCart.get(i).getSoluong();
             }
             notificationBadge.setText(String.valueOf(totalItem));
         }

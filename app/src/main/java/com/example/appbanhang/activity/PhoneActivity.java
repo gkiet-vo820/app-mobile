@@ -1,39 +1,29 @@
 package com.example.appbanhang.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.ViewFlipper;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.GravityCompat;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
-import com.example.appbanhang.adapter.DienThoaiAdapter;
-import com.example.appbanhang.api.DienThoaiService;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.adapter.PhoneAdapter;
+import com.example.appbanhang.api.PhoneService;
+import com.example.appbanhang.model.Product;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DienThoaiActivity extends AppCompatActivity {
+public class PhoneActivity extends AppCompatActivity {
 
     Toolbar toolBarDienThoai;
     RecyclerView recyclerViewDienThoai;
-    DienThoaiAdapter dienThoaiAdapter;
-    List<SanPham> dsSanPham;
-    DienThoaiService dienThoaiService;
+    PhoneAdapter phoneAdapter;
+    List<Product> dsProduct;
+    PhoneService phoneService;
 
     LinearLayoutManager linearLayoutManager;
     boolean isLoading = false;
@@ -46,7 +36,7 @@ public class DienThoaiActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_dien_thoai);
+        setContentView(R.layout.activity_phone);
         addControls();
         addEvents();
         ActionBar();
@@ -83,12 +73,12 @@ public class DienThoaiActivity extends AppCompatActivity {
 
         linearLayoutManager = new LinearLayoutManager(this);
 
-        dsSanPham = new ArrayList<>();
-        dienThoaiAdapter = new DienThoaiAdapter(this, dsSanPham);
-        recyclerViewDienThoai.setAdapter(dienThoaiAdapter);
+        dsProduct = new ArrayList<>();
+        phoneAdapter = new PhoneAdapter(this, dsProduct);
+        recyclerViewDienThoai.setAdapter(phoneAdapter);
         recyclerViewDienThoai.setLayoutManager(linearLayoutManager);
         //recyclerViewDienThoai.setLayoutManager(new GridLayoutManager(this,1));
-        dienThoaiService = new DienThoaiService(this,dienThoaiAdapter,dsSanPham);
+        phoneService = new PhoneService(this, phoneAdapter, dsProduct);
 
 
     }
@@ -104,7 +94,7 @@ public class DienThoaiActivity extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(isLoading == false && isLastPage == false && page < totalPage - 1){
-                    if(linearLayoutManager.findLastVisibleItemPosition() == dsSanPham.size() - 1){
+                    if(linearLayoutManager.findLastVisibleItemPosition() == dsProduct.size() - 1){
                         isLoading = true;
                         loadMore();
                     }
@@ -116,7 +106,7 @@ public class DienThoaiActivity extends AppCompatActivity {
     private void loadMore(){
         page++;
 
-        dienThoaiService.getAllDienThoai(loai, page, limit,
+        phoneService.getAllDienThoai(loai, page, limit,
                 (tp, count) -> {
                     totalPage = tp;
                     if (page >= totalPage - 1 || count == 0) {
@@ -132,7 +122,7 @@ public class DienThoaiActivity extends AppCompatActivity {
         isLoading = false;
 
 
-        dienThoaiService.getAllDienThoai(loai, page, limit,
+        phoneService.getAllDienThoai(loai, page, limit,
                 (tp, count) -> {
                     totalPage = tp;
 

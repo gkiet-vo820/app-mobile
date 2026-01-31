@@ -1,13 +1,13 @@
 package com.example.appbanhang.model;
 
-public class GioHang {
+public class ShoppingCart {
     private int id;
     private String tensp;
     private double giasp;
     private String hinhsp;
     private int soluong;
 
-    public GioHang() {
+    public ShoppingCart() {
     }
 
     public int getId() {

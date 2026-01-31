@@ -2,7 +2,7 @@ package com.example.appbanhang.model;
 
 import java.io.Serializable;
 
-public class SanPham implements Serializable {
+public class Product implements Serializable {
     private int id;
     private String tensp;
     private double gia;
@@ -12,7 +12,7 @@ public class SanPham implements Serializable {
     private String ngaytao;
     private int soluongban;
 
-    public SanPham(int id, String tensp, double gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {
+    public Product(int id, String tensp, double gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {
         this.id = id;
         this.tensp = tensp;
         this.gia = gia;
@@ -23,7 +23,7 @@ public class SanPham implements Serializable {
         this.soluongban = soluongban;
     }
 
-    public SanPham() {
+    public Product() {
     }
 
     public int getId() {

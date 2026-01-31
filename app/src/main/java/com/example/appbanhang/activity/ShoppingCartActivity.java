@@ -1,6 +1,5 @@
 package com.example.appbanhang.activity;
 
-import android.media.metrics.Event;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -9,16 +8,13 @@ import android.widget.TextView;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
-import com.example.appbanhang.adapter.GioHangAdapter;
-import com.example.appbanhang.model.GioHang;
-import com.example.appbanhang.model.eventbus.TinhTongEvent;
+import com.example.appbanhang.adapter.ShoppingCartAdapter;
+import com.example.appbanhang.model.ShoppingCart;
+import com.example.appbanhang.model.eventbus.TotalEvent;
 import com.example.appbanhang.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,14 +24,14 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class GioHangActivity extends AppCompatActivity {
+public class ShoppingCartActivity extends AppCompatActivity {
     TextView gioHangTrong, txtTongTien, txtChinhSua;
     Toolbar toolbarGioHang;
     RecyclerView recyclerViewGioHang;
     Button btnMuaHang;
 
-    GioHangAdapter gioHangAdapter;
-    List<GioHang> gioHangList;
+    ShoppingCartAdapter shoppingCartAdapter;
+    List<ShoppingCart> shoppingCartList;
 
     boolean isEditing = false;
 
@@ -43,7 +39,7 @@ public class GioHangActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_gio_hang);
+        setContentView(R.layout.activity_shopping_cart);
         addControls();
         addEvents();
         ActionBar();
@@ -75,12 +71,12 @@ public class GioHangActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewGioHang.setLayoutManager(layoutManager);
 
-        if(Utils.dsGioHang.size() == 0){
+        if(Utils.dsShoppingCart.size() == 0){
             gioHangTrong.setVisibility(View.VISIBLE);
         }
         else{
-            gioHangAdapter = new GioHangAdapter(this,Utils.dsGioHang);
-            recyclerViewGioHang.setAdapter(gioHangAdapter);
+            shoppingCartAdapter = new ShoppingCartAdapter(this,Utils.dsShoppingCart);
+            recyclerViewGioHang.setAdapter(shoppingCartAdapter);
         }
 
         txtChinhSua = findViewById(R.id.txtChinhSua);
@@ -98,18 +94,18 @@ public class GioHangActivity extends AppCompatActivity {
             isEditing = !isEditing;
             if (isEditing) {
                 txtChinhSua.setText("Hoàn tất");
-                if (gioHangAdapter != null) gioHangAdapter.setEditMode(true);
+                if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(true);
             } else {
                 txtChinhSua.setText("Chỉnh sửa");
-                if (gioHangAdapter != null) gioHangAdapter.setEditMode(false);
+                if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(false);
             }
         });
     }
 
     private void tinhTongTien(){
         double tongtien = 0;
-        for (int i = 0; i < Utils.dsGioHang.size(); i++){
-            tongtien += Utils.dsGioHang.get(i).getGiasp() * Utils.dsGioHang.get(i).getSoluong();
+        for (int i = 0; i < Utils.dsShoppingCart.size(); i++){
+            tongtien += Utils.dsShoppingCart.get(i).getGiasp() * Utils.dsShoppingCart.get(i).getSoluong();
         }
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
@@ -127,8 +123,8 @@ public class GioHangActivity extends AppCompatActivity {
         super.onStop();
     }
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    public void eventTinhTien(TinhTongEvent tinhTongEvent){
-        if(tinhTongEvent != null){
+    public void eventTinhTien(TotalEvent totalEvent){
+        if(totalEvent != null){
             tinhTongTien();
         }
     }

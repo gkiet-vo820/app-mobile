@@ -10,15 +10,15 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
-import com.example.appbanhang.model.LoaiSp;
+import com.example.appbanhang.model.Menu;
 
 import java.util.List;
 
-public class MenuAdapter extends ArrayAdapter<LoaiSp> {
+public class MenuAdapter extends ArrayAdapter<Menu> {
 
     Context context;
 
-    public MenuAdapter(Context context, List<LoaiSp> data) {
+    public MenuAdapter(Context context, List<Menu> data) {
         super(context, 0, data);
         this.context = context;
     }
@@ -45,10 +45,10 @@ public class MenuAdapter extends ArrayAdapter<LoaiSp> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        LoaiSp loaiSp = getItem(position);
-        if (loaiSp != null) {
-            viewHolder.txtTenSp.setText(loaiSp.getTensanpham());
-            Glide.with(context).load(loaiSp.getHinhanh()).into(viewHolder.imgHinhAnh);
+        Menu menu = getItem(position);
+        if (menu != null) {
+            viewHolder.txtTenSp.setText(menu.getTensanpham());
+            Glide.with(context).load(menu.getHinhanh()).into(viewHolder.imgHinhAnh);
         }
         return convertView;
     }

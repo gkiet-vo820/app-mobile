@@ -15,24 +15,22 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.ItemClickListener;
 import com.example.appbanhang.R;
-import com.example.appbanhang.activity.ChiTietActivity;
-import com.example.appbanhang.model.LoaiSp;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.model.Product;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.zip.Inflater;
 
-public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
-    List<SanPham> dsSanPham;
+    List<Product> dsProduct;
 
     private static final int VIEW_TYPE_DATA = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
-    public DienThoaiAdapter(Context context, List<SanPham> dsSanPham) {
+    public PhoneAdapter(Context context, List<Product> dsProduct) {
         this.context = context;
-        this.dsSanPham = dsSanPham;
+        this.dsProduct = dsProduct;
     }
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder{
@@ -67,7 +65,7 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         if (viewType == VIEW_TYPE_DATA){
-            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dienthoai,parent,false);
+            View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_phone,parent,false);
             return new MyViewHolder(view);
         }
         else{
@@ -80,9 +78,9 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MyViewHolder){
             MyViewHolder myViewHolder = (MyViewHolder) holder;
-            SanPham sanPham = dsSanPham.get(position);
-            myViewHolder.txtTenSpDT.setText(sanPham.getTensp());
-            String gia = String.valueOf(sanPham.getGia());
+            Product product = dsProduct.get(position);
+            myViewHolder.txtTenSpDT.setText(product.getTensp());
+            String gia = String.valueOf(product.getGia());
             if(gia != null && !gia.isEmpty()){
                 DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                 myViewHolder.txtGiaSpDT.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
@@ -90,14 +88,14 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             else{
                 myViewHolder.txtGiaSpDT.setText("Giá đang được cập nhật");
             }
-            myViewHolder.txtMoTaSpDT.setText("Mô tả: " + sanPham.getMota());
-            Glide.with(context).load(sanPham.getHinhanh()).into(myViewHolder.imgDienThoai);
+            myViewHolder.txtMoTaSpDT.setText("Mô tả: " + product.getMota());
+            Glide.with(context).load(product.getHinhanh()).into(myViewHolder.imgDienThoai);
             myViewHolder.setItemClickListener(new ItemClickListener() {
                 @Override
                 public void onClick(View view, int position, boolean isLongClick) {
                     if(!isLongClick){
-                        Intent intent = new Intent(context, ChiTietActivity.class);
-                        intent.putExtra("chitiet", sanPham);
+                        Intent intent = new Intent(context, DetailActivity.class);
+                        intent.putExtra("chitiet", product);
 //                        intent.putExtra("loai", 1);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
@@ -113,14 +111,14 @@ public class DienThoaiAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        return dsSanPham.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
+        return dsProduct.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
     }
 
 
 
     @Override
     public int getItemCount() {
-        return dsSanPham.size();
+        return dsProduct.size();
     }
 
 

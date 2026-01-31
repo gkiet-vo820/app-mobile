@@ -1,24 +1,19 @@
 package com.example.appbanhang.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.LaptopAdapter;
 import com.example.appbanhang.api.LaptopService;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.model.Product;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +23,7 @@ public class LaptopActivity extends AppCompatActivity {
     Toolbar toolBarLaptop;
     RecyclerView recyclerViewLaptop;
     LaptopAdapter laptopAdapter;
-    List<SanPham> dsSanPham;
+    List<Product> dsProduct;
     LaptopService laptopService;
 
     LinearLayoutManager linearLayoutManager;
@@ -79,12 +74,12 @@ public class LaptopActivity extends AppCompatActivity {
 
         linearLayoutManager = new LinearLayoutManager(this);
 
-        dsSanPham = new ArrayList<>();
-        laptopAdapter = new LaptopAdapter(this, dsSanPham);
+        dsProduct = new ArrayList<>();
+        laptopAdapter = new LaptopAdapter(this, dsProduct);
         recyclerViewLaptop.setAdapter(laptopAdapter);
         recyclerViewLaptop.setLayoutManager(linearLayoutManager);
         //recyclerViewLaptop.setLayoutManager(new GridLayoutManager(this,1));
-        laptopService = new LaptopService(this,laptopAdapter,dsSanPham);
+        laptopService = new LaptopService(this,laptopAdapter, dsProduct);
 
 
     }
@@ -100,7 +95,7 @@ public class LaptopActivity extends AppCompatActivity {
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
                 if(isLoading == false && isLastPage == false && page < totalPage - 1){
-                    if(linearLayoutManager.findLastVisibleItemPosition() == dsSanPham.size() - 1){
+                    if(linearLayoutManager.findLastVisibleItemPosition() == dsProduct.size() - 1){
                         isLoading = true;
                         loadMore();
                     }

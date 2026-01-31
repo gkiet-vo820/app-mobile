@@ -14,8 +14,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.ImageClickListener;
 import com.example.appbanhang.R;
-import com.example.appbanhang.model.GioHang;
-import com.example.appbanhang.model.eventbus.TinhTongEvent;
+import com.example.appbanhang.model.ShoppingCart;
+import com.example.appbanhang.model.eventbus.TotalEvent;
 import com.example.appbanhang.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -23,15 +23,15 @@ import org.greenrobot.eventbus.EventBus;
 import java.text.DecimalFormat;
 import java.util.List;
 
-public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHolder> {
+public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapter.MyViewHolder> {
     Context context;
-    List<GioHang> gioHangList;
+    List<ShoppingCart> shoppingCartList;
     private boolean isEditMode = false;
 
 
-    public GioHangAdapter(Context context, List<GioHang> gioHangList) {
+    public ShoppingCartAdapter(Context context, List<ShoppingCart> shoppingCartList) {
         this.context = context;
-        this.gioHangList = gioHangList;
+        this.shoppingCartList = shoppingCartList;
     }
     public void setEditMode(boolean mode) {
         this.isEditMode = mode;
@@ -80,22 +80,22 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
     }
     @NonNull
     @Override
-    public GioHangAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_giohang, parent,  false);
+    public ShoppingCartAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shoppingcart, parent,  false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull GioHangAdapter.MyViewHolder holder, int position) {
-        GioHang gioHang = gioHangList.get(position);
-        holder.txtTenSp_GioHang.setText(gioHang.getTensp());
-        holder.txtSoLuongSP_GioHang.setText(String.valueOf(gioHang.getSoluong()));
+    public void onBindViewHolder(@NonNull ShoppingCartAdapter.MyViewHolder holder, int position) {
+        ShoppingCart shoppingCart = shoppingCartList.get(position);
+        holder.txtTenSp_GioHang.setText(shoppingCart.getTensp());
+        holder.txtSoLuongSP_GioHang.setText(String.valueOf(shoppingCart.getSoluong()));
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        holder.txtTenGiaSp_GioHang.setText("Giá: " + decimalFormat.format(gioHang.getGiasp()) + "Đ");
+        holder.txtTenGiaSp_GioHang.setText("Giá: " + decimalFormat.format(shoppingCart.getGiasp()) + "Đ");
 
-        double tongTien = gioHang.getGiasp() * gioHang.getSoluong();
+        double tongTien = shoppingCart.getGiasp() * shoppingCart.getSoluong();
         holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(tongTien) + "Đ");
-        Glide.with(context).load(gioHang.getHinhsp()).into(holder.imgGioHang);
+        Glide.with(context).load(shoppingCart.getHinhsp()).into(holder.imgGioHang);
 
         if (isEditMode) {
             holder.imgDelete.setVisibility(View.VISIBLE);
@@ -106,15 +106,15 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
             @Override
             public void onImageClick(View view, int position, int value) {
                 if(value == 1){
-                    if(gioHangList.get(position).getSoluong() > 1) {
-                        int soLuongMoi = gioHangList.get(position).getSoluong() - 1;
-                        gioHangList.get(position).setSoluong(soLuongMoi);
+                    if(shoppingCartList.get(position).getSoluong() > 1) {
+                        int soLuongMoi = shoppingCartList.get(position).getSoluong() - 1;
+                        shoppingCartList.get(position).setSoluong(soLuongMoi);
                     }
                 }
                 else if(value == 2){
-                    if(gioHangList.get(position).getSoluong() < 11){
-                        int soLuongMoi = gioHangList.get(position).getSoluong() + 1;
-                        gioHangList.get(position).setSoluong(soLuongMoi);
+                    if(shoppingCartList.get(position).getSoluong() < 11){
+                        int soLuongMoi = shoppingCartList.get(position).getSoluong() + 1;
+                        shoppingCartList.get(position).setSoluong(soLuongMoi);
                     }
                 }
                 else if(value == 3){ // 4. Xử lý XÓA
@@ -123,19 +123,19 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
                     builder.setMessage("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?");
                     builder.setPositiveButton("Đồng ý", (dialog, which) -> {
                         // Xóa khỏi danh sách Utils và danh sách tại chỗ
-                        Utils.dsGioHang.remove(position);
+                        Utils.dsShoppingCart.remove(position);
                         notifyItemRemoved(position);
-                        notifyItemRangeChanged(position, gioHangList.size());
-                        EventBus.getDefault().postSticky(new TinhTongEvent());
+                        notifyItemRangeChanged(position, shoppingCartList.size());
+                        EventBus.getDefault().postSticky(new TotalEvent());
                     });
                     builder.setNegativeButton("Hủy", null);
                     builder.show();
                 }
                 if (value != 3) {
-                    holder.txtSoLuongSP_GioHang.setText(String.valueOf(gioHangList.get(position).getSoluong()));
-                    double giaMoi = gioHangList.get(position).getSoluong() * gioHangList.get(position).getGiasp();
+                    holder.txtSoLuongSP_GioHang.setText(String.valueOf(shoppingCartList.get(position).getSoluong()));
+                    double giaMoi = shoppingCartList.get(position).getSoluong() * shoppingCartList.get(position).getGiasp();
                     holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(giaMoi) + "Đ");
-                    EventBus.getDefault().postSticky(new TinhTongEvent());
+                    EventBus.getDefault().postSticky(new TotalEvent());
                 }
 
             }
@@ -144,6 +144,6 @@ public class GioHangAdapter extends RecyclerView.Adapter<GioHangAdapter.MyViewHo
 
     @Override
     public int getItemCount() {
-        return gioHangList.size();
+        return shoppingCartList.size();
     }
 }

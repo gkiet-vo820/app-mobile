@@ -1,17 +1,17 @@
 package com.example.appbanhang.model;
 
-public class LoaiSp {
+public class Menu {
     private int id;
     private String tensanpham;
     private String hinhanh;
 
-    public LoaiSp(int id, String tensanpham, String hinhanh) {
+    public Menu(int id, String tensanpham, String hinhanh) {
         this.id = id;
         this.tensanpham = tensanpham;
         this.hinhanh = hinhanh;
     }
 
-    public LoaiSp() {
+    public Menu() {
     }
 
     public int getId() {

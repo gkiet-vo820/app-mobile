@@ -7,9 +7,8 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
-import com.example.appbanhang.adapter.DienThoaiAdapter;
-import com.example.appbanhang.adapter.SanPhamAdapter;
-import com.example.appbanhang.model.SanPham;
+import com.example.appbanhang.adapter.ProductAdapter;
+import com.example.appbanhang.model.Product;
 import com.example.appbanhang.util.Configure;
 
 import org.json.JSONArray;
@@ -17,38 +16,32 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public class DienThoaiService {
+public class ProductService {
     private RequestQueue requestQueue;
     private Context context;
-    private DienThoaiAdapter adapter;
-    private List<SanPham> dsSanPham;
-    public DienThoaiService(Context context, DienThoaiAdapter adapter,List<SanPham> dsSanPham) {
+    private ProductAdapter adapter;
+    private List<Product> dsProduct;
+
+    public ProductService(Context context, ProductAdapter adapter, List<Product> dsProduct) {
         this.requestQueue = Volley.newRequestQueue(context);
         this.context = context;
         this.adapter = adapter;
-        this.dsSanPham = dsSanPham;
+        this.dsProduct = dsProduct;
     }
-
-    public interface PageCallback {
-        void onResult(int totalPage, int count);
-    }
-    public void getAllDienThoai(int loai, int page, int limit, PageCallback callback) {
-        String url = Configure.URL_DT + "?category=" + loai + "&page=" + page + "&limit=" + limit;;
+    public void getAllSanPham() {
         JsonObjectRequest request = new JsonObjectRequest(
                 Request.Method.GET,
-                url,
+                Configure.URL_SP,
                 null,
                 response -> {
                     try {
                         if (response.getBoolean("success")) {
                             JSONArray array = response.getJSONArray("data");
 
-                            if(page == 0){
-                                dsSanPham.clear();
-                            }
+                            dsProduct.clear();
                             for (int i = 0; i < array.length(); i++) {
                                 JSONObject obj = array.getJSONObject(i);
-                                dsSanPham.add(new SanPham(
+                                dsProduct.add(new Product(
                                         obj.getInt("id"),
                                         obj.getString("name"),
                                         obj.getDouble("price"),
@@ -60,13 +53,12 @@ public class DienThoaiService {
                                 ));
                             }
                             adapter.notifyDataSetChanged();
-                            int totalPage = response.getInt("totalPage");
-                            callback.onResult(totalPage, array.length());
                         }
                     } catch (Exception e) {
                         e.printStackTrace();
                         Toast.makeText(context, "Lỗi parse", Toast.LENGTH_SHORT).show();
                     }
+
                 },
                 error -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
         );
