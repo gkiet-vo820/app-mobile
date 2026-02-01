@@ -66,8 +66,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     }
 
-
-
     private void addEvents(){
         btnDoiMatKhau.setOnClickListener(new View.OnClickListener() {
             @Override

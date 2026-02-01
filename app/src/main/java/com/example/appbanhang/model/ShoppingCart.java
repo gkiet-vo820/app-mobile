@@ -7,6 +7,8 @@ public class ShoppingCart {
     private String hinhsp;
     private int soluong;
 
+    private boolean isSelected;
+
     public ShoppingCart() {
     }
 
@@ -48,5 +50,13 @@ public class ShoppingCart {
 
     public void setSoluong(int soluong) {
         this.soluong = soluong;
+    }
+
+    public boolean isSelected() {
+        return isSelected;
+    }
+
+    public void setSelected(boolean selected) {
+        isSelected = selected;
     }
 }

@@ -11,7 +11,7 @@
         android:id="@+id/imgDelete"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:layout_gravity="end"
+        android:layout_gravity="end|top"
         android:src="@android:drawable/ic_delete"
         android:visibility="gone"
         android:padding="5dp"
@@ -47,6 +47,7 @@
                 android:id="@+id/txtTenGiaSp_GioHang"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:layout_marginTop="10dp"
                 android:text="15000"
                 android:textColor="#FA5252"
                 android:textSize="20sp" />
@@ -90,17 +91,23 @@
                     android:layout_weight="0.1"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_plus"/>
-
-
             </LinearLayout>
 
-                <TextView
-                    android:id="@+id/txtTenGiaSp2_GioHang"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="15000"
-                    android:textSize="20sp"
-                    android:textColor="#FA5252"/>
+            <TextView
+                android:id="@+id/txtTenGiaSp2_GioHang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="15000"
+                android:textSize="20sp"
+                android:textColor="#FA5252"/>
         </LinearLayout>
+        <CheckBox
+            android:id="@+id/chkItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:visibility="gone"
+            android:layout_gravity="end|bottom"/>
     </LinearLayout>
 </androidx.cardview.widget.CardView>

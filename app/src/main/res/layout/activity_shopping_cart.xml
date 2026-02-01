@@ -51,33 +51,70 @@
         android:id="@+id/linarLayoutGioHang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="1"
-        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
         app:layout_constraintBottom_toTopOf="@id/btnMuaHang">
-        <TextView
-            android:layout_width="wrap_content"
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Tổng tiền: "
-            android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_red_light"
-            android:layout_weight="0.4"
-            android:padding="5dp"
-            android:layout_marginLeft="15dp"/>
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="10dp">
+
         <TextView
-            android:id="@+id/txtTongTien"
-            android:layout_width="wrap_content"
+            android:id="@+id/txtChonTatCa"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="50.000"
+            android:layout_weight=".5"
+            android:text="Chọn tất cả"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/holo_red_light"
-            android:layout_weight="0.6"
+            android:textStyle="italic"
+            android:visibility="gone"
+            android:layout_margin="10dp"/>
+
+        <TextView
+            android:id="@+id/txtXoaTatCa"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight=".5"
+            android:text="Xóa tất cả"
             android:gravity="right"
-            android:padding="5dp"
-            android:layout_marginRight="20dp"/>
+            android:textSize="20sp"
+            android:textStyle="italic"
+            android:visibility="gone"
+            android:layout_margin="10dp"/>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="1"
+            android:layout_marginBottom="10dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Tổng tiền: "
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_weight="0.4"
+                android:padding="5dp"
+                android:layout_marginLeft="15dp"/>
+            <TextView
+                android:id="@+id/txtTongTien"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="50.000"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/holo_red_light"
+                android:layout_weight="0.6"
+                android:gravity="right"
+                android:padding="5dp"
+                android:layout_marginRight="20dp"/>
+        </LinearLayout>
     </LinearLayout>
+
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnMuaHang"
@@ -92,4 +129,6 @@
         android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
         tools:layout_editor_absoluteX="20dp" />
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

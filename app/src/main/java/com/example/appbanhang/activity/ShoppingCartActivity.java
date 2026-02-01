@@ -27,7 +27,7 @@ import java.text.DecimalFormat;
 import java.util.List;
 
 public class ShoppingCartActivity extends AppCompatActivity {
-    TextView gioHangTrong, txtTongTien, txtChinhSua;
+    TextView gioHangTrong, txtTongTien, txtChinhSua, txtChonTatCa, txtXoaTatCa;
     Toolbar toolbarGioHang;
     RecyclerView recyclerViewGioHang;
     AppCompatButton btnMuaHang;
@@ -78,6 +78,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         checkEmptyCart();
 
         txtChinhSua = findViewById(R.id.txtChinhSua);
+        txtChonTatCa = findViewById(R.id.txtChonTatCa);
+        txtXoaTatCa = findViewById(R.id.txtXoaTatCa);
     }
 
     private void checkEmptyCart(){
@@ -105,14 +107,44 @@ public class ShoppingCartActivity extends AppCompatActivity {
             }
         });
 
-        txtChinhSua.setOnClickListener(v -> {
-            isEditing = !isEditing;
-            if (isEditing) {
-                txtChinhSua.setText(R.string.hoantat);
-                if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(true);
-            } else {
-                txtChinhSua.setText(R.string.chinhsua);
-                if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(false);
+        txtChinhSua.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isEditing = !isEditing;
+                if (isEditing) {
+                    txtChinhSua.setText(R.string.hoantat);
+                    txtChonTatCa.setVisibility(View.VISIBLE);
+                    txtXoaTatCa.setVisibility(View.VISIBLE);
+                    if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(true);
+                } else {
+                    txtChinhSua.setText(R.string.chinhsua);
+                    txtChonTatCa.setVisibility(View.GONE);
+                    txtXoaTatCa.setVisibility(View.GONE);
+                    if (shoppingCartAdapter != null) shoppingCartAdapter.setEditMode(false);
+                }
+            }
+        });
+
+        txtChonTatCa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (ShoppingCart item : Utils.dsShoppingCart) {
+                    item.setSelected(true);
+                }
+                shoppingCartAdapter.notifyDataSetChanged();
+            }
+        });
+
+        txtXoaTatCa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for (int i = Utils.dsShoppingCart.size() - 1; i >= 0; i--) {
+                    if (Utils.dsShoppingCart.get(i).isSelected()) {
+                        Utils.dsShoppingCart.remove(i);
+                    }
+                }
+                shoppingCartAdapter.notifyDataSetChanged();
+                EventBus.getDefault().postSticky(new TotalEvent());
             }
         });
     }

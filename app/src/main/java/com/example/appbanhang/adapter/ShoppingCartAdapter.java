@@ -5,6 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,6 +41,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView txtTenSp_GioHang, txtTenGiaSp_GioHang, txtSoLuongSP_GioHang, txtTenGiaSp2_GioHang;
         ImageView imgGioHang, imgTru_GioHang, imgCong_GioHang, imgDelete;
+        CheckBox chkItem;
         private ImageClickListener imageClickListener;
         public MyViewHolder(@NonNull View itemView){
             super((itemView));
@@ -57,6 +59,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             imgDelete = itemView.findViewById(R.id.imgDelete);
             imgDelete.setOnClickListener(this);
 
+            chkItem = itemView.findViewById(R.id.chkItem);
         }
 
         public void setImageClickListener(ImageClickListener imageClickListener) {
@@ -97,9 +100,17 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         if (isEditMode) {
             holder.imgDelete.setVisibility(View.VISIBLE);
+            holder.chkItem.setVisibility(View.VISIBLE);
+            holder.chkItem.setChecked(shoppingCart.isSelected());
         } else {
             holder.imgDelete.setVisibility(View.GONE);
+            holder.chkItem.setVisibility(View.GONE);
         }
+
+        holder.chkItem.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            shoppingCart.setSelected(isChecked);
+            EventBus.getDefault().postSticky(new TotalEvent());
+        });
         holder.setImageClickListener(new ImageClickListener() {
             @Override
             public void onImageClick(View view, int position, int value) {
