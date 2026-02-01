@@ -24,6 +24,12 @@ public interface GetApi {
     @GET("apiProduct/getCategory")
     Single<ProductResponse> getProductCategory(@Query("category") int category, @Query("page") int page, @Query("limit") int limit);
 
+    @GET("apiProduct/getTop10_new")
+    Single<ProductResponse> getProductTop10New();
+
+    @GET("apiProduct/getTop10_bestseller")
+    Single<ProductResponse> getTop10BestSeller();
+
     @POST("apiUser/register")
     Single<UserResponse> register(@Body RegisterRequest registerRequest);
 

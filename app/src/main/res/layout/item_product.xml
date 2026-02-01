@@ -44,9 +44,19 @@
         </LinearLayout>
 
         <ImageView
+            android:id="@+id/imgNew"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:layout_gravity="top|right"
-            android:src="@drawable/ic_new"/>
+            android:src="@drawable/ic_new"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/imgHot"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="top|right"
+            android:src="@drawable/ic_hot"
+            android:visibility="gone"/>
     </FrameLayout>
 </androidx.cardview.widget.CardView>

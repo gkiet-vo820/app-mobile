@@ -23,15 +23,24 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
     Context context;
     List<Product> dsProduct;
+    public static final int MODE_ALL = 0;
+    public static final int MODE_NEW = 1;
+    public static final int MODE_HOT = 2;
+    private int mode = MODE_ALL;
 
     public ProductAdapter(Context context, List<Product> dsProduct) {
         this.context = context;
         this.dsProduct = dsProduct;
     }
 
+    public void setMode(int mode) {
+        this.mode = mode;
+        notifyDataSetChanged();
+    }
+
     public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView txtTenSp, txtGiaSp;
-        ImageView imgSp;
+        ImageView imgSp, imgNew, imgHot;
 
         private ItemClickListener itemClickListener;
         public MyViewHolder(@NonNull View itemView){
@@ -40,6 +49,9 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
             txtGiaSp = itemView.findViewById(R.id.txtGiaSp);
             imgSp = itemView.findViewById(R.id.imgSp);
             itemView.setOnClickListener(this);
+
+            imgNew = itemView.findViewById(R.id.imgNew);
+            imgHot = itemView.findViewById(R.id.imgHot);
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -84,6 +96,14 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
                 }
             }
         });
+
+        holder.imgNew.setVisibility(View.GONE);
+        holder.imgHot.setVisibility(View.GONE);
+        if (mode == MODE_NEW) {
+            holder.imgNew.setVisibility(View.VISIBLE);
+        } else if (mode == MODE_HOT) {
+            holder.imgHot.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

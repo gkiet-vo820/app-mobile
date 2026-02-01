@@ -46,6 +46,45 @@ public class ProductService {
                         )
         );
     }
+
+    public void getTop10New() {
+        compositeDisposable.add(
+                getApi.getProductTop10New()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                res -> {
+                                    if (res.isSuccess()) {
+                                        dsProduct.clear();
+                                        for (Product product : res.getData()) {
+                                            dsProduct.add(product);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                },
+                                err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+                        )
+        );
+    }
+    public void getTop10BestSeller() {
+        compositeDisposable.add(
+                getApi.getTop10BestSeller()
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                res -> {
+                                    if (res.isSuccess()) {
+                                        dsProduct.clear();
+                                        for (Product product : res.getData()) {
+                                            dsProduct.add(product);
+                                        }
+                                        adapter.notifyDataSetChanged();
+                                    }
+                                },
+                                err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+                        )
+        );
+    }
     public void clear() {
         compositeDisposable.clear();
     }

@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigaionView;
     ListView listViewManHinhChinh;
 
-    AppCompatButton btnSanPhamMoiNhat, btnSanPhamBanChay;
+    AppCompatButton btnTatCaSanPham, btnSanPhamMoiNhat, btnSanPhamBanChay;
 
     MenuAdapter menuAdapter;
     List<Menu> dsMenu;
@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewManHinhChinh.setAdapter(productAdapter);
         productService = new ProductService(this, productAdapter, dsProduct);
 
+        btnTatCaSanPham = findViewById(R.id.btnTatCaSanPham);
         btnSanPhamMoiNhat = findViewById(R.id.btnSanPhamMoiNhat);
         btnSanPhamBanChay = findViewById(R.id.btnSanPhamBanChay);
 
@@ -186,18 +187,26 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+        btnTatCaSanPham.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showListSanPham();
+                setActiveButton(btnTatCaSanPham);
+            }
+        });
         btnSanPhamMoiNhat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               showListSanPham();
-               setActiveButton(btnSanPhamMoiNhat);
+                showListSanPhamMoiNhat();
+                setActiveButton(btnSanPhamMoiNhat);
 
             }
         });
         btnSanPhamBanChay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                showListSanPhamBanChay();
+                setActiveButton(btnSanPhamBanChay);
             }
         });
 
@@ -210,9 +219,11 @@ public class MainActivity extends AppCompatActivity {
         });
     }
     private void setActiveButton(Button button) {
+        btnTatCaSanPham.setBackgroundResource(R.drawable.button_inactive);
         btnSanPhamMoiNhat.setBackgroundResource(R.drawable.button_inactive);
         btnSanPhamBanChay.setBackgroundResource(R.drawable.button_inactive);
 
+        btnTatCaSanPham.setTextColor(getColor(android.R.color.black));
         btnSanPhamMoiNhat.setTextColor(getColor(android.R.color.black));
         btnSanPhamBanChay.setTextColor(getColor(android.R.color.black));
 
@@ -223,6 +234,17 @@ public class MainActivity extends AppCompatActivity {
         menuService.getAllLoaiSanPham();
     }
     private void showListSanPham(){
+        productAdapter.setMode(ProductAdapter.MODE_ALL);
         productService.getAllSanPham();
+    }
+
+    private void showListSanPhamMoiNhat(){
+        productAdapter.setMode(ProductAdapter.MODE_NEW);
+        productService.getTop10New();
+    }
+
+    private void showListSanPhamBanChay(){
+        productAdapter.setMode(ProductAdapter.MODE_HOT);
+        productService.getTop10BestSeller();
     }
 }

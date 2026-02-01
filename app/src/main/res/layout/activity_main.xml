@@ -59,12 +59,23 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_margin="10dp"
+                    android:gravity="center"
                     android:weightSum="1">
+                    <androidx.appcompat.widget.AppCompatButton
+                        android:id="@+id/btnTatCaSanPham"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="0.3"
+                        android:text="Tất cả sản phẩm"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black"
+                        android:background="@drawable/button_inactive"
+                        android:backgroundTint="@null" />
                     <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btnSanPhamMoiNhat"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.3"
                         android:text="Sản phẩm mới nhất"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
@@ -75,7 +86,7 @@
                         android:id="@+id/btnSanPhamBanChay"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_weight="0.5"
+                        android:layout_weight="0.3"
                         android:text="Sản phẩm bán chạy"
                         android:textStyle="bold"
                         android:textColor="@android:color/black"
