@@ -4,4 +4,6 @@
 
     <string name="hoantat"><u>Hoàn tất</u></string>
     <string name="chinhsua"><u>Chỉnh sửa</u></string>
+    <string name="quaylaidangnhap"><u>Quay lại đăng nhập</u></string>
+    <string name="quenmatkhau"><u>Quên mật khẩu?</u></string>
 </resources>

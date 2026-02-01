@@ -15,6 +15,7 @@ import android.widget.ViewFlipper;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -44,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     NavigationView navigaionView;
     ListView listViewManHinhChinh;
 
-    Button btnSanPhamMoiNhat, btnSanPhamBanChay;
+    AppCompatButton btnSanPhamMoiNhat, btnSanPhamBanChay;
 
     MenuAdapter menuAdapter;
     List<Menu> dsMenu;
@@ -64,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+
         addControls();
         addEvents();
         ActionBar();

@@ -59,4 +59,10 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.github.akarnokd:rxjava3-retrofit-adapter:3.0.0")
+
+    //Paper
+    implementation("io.github.pilgr:paperdb:2.7.1")
+
+    //Gson
+    implementation("com.google.code.gson:gson:2.8.9")
 }

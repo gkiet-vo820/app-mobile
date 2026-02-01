@@ -3,45 +3,46 @@ package com.example.appbanhang.api;
 import android.content.Context;
 import android.widget.Toast;
 
-import com.example.appbanhang.adapter.MenuAdapter;
-import com.example.appbanhang.model.Menu;
+import com.example.appbanhang.model.request.ForgotPasswordEmailRequest;
 import com.example.appbanhang.util.GetApi;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-public class MenuService {
-    private GetApi getApi;
+public class ForgotPasswordService {
     private Context context;
-    private MenuAdapter adapter;
+    private GetApi getApi;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public MenuService(Context context, MenuAdapter adapter) {
+    public ForgotPasswordService(Context context) {
         this.context = context;
-        this.adapter = adapter;
         getApi = RetrofitClient.getInstance().create(GetApi.class);
     }
 
-    public void getAllLoaiSanPham() {
+    public void sendEmail(String email) {
+        ForgotPasswordEmailRequest request = new ForgotPasswordEmailRequest();
+        request.setEmail(email);
+
         compositeDisposable.add(
-                getApi.getAllMenu()
+                getApi.forgotPassword(request)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    if (res.isSuccess()) {
-                                        adapter.clear();
-                                        for (Menu menu : res.getData()) {
-                                            adapter.add(menu);
-                                        }
-                                        adapter.notifyDataSetChanged();
-                                    }
+                                    Toast.makeText(context,
+                                            res.getMessage(),
+                                            Toast.LENGTH_LONG).show();
                                 },
-                                err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+                                err -> {
+                                    Toast.makeText(context,
+                                            "Lỗi gửi email",
+                                            Toast.LENGTH_SHORT).show();
+                                }
                         )
         );
     }
+
     public void clear() {
         compositeDisposable.clear();
     }

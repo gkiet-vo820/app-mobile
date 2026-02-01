@@ -1,4 +1,6 @@
-package com.example.appbanhang.model;
+package com.example.appbanhang.model.response;
+
+import com.example.appbanhang.model.Product;
 
 import java.util.List;
 

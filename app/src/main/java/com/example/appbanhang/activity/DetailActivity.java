@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
@@ -27,7 +28,7 @@ public class DetailActivity extends AppCompatActivity {
     Toolbar toolBarChiTietSP;
     TextView txtTenChiTietSP, txtGiaChiTietSP, txtMoTaChiTietSP;
     ImageView imgChiTietSP;
-    Button btnThemVaoGioHang;
+    AppCompatButton btnThemVaoGioHang;
     Spinner spinner;
     FrameLayout frameLayoutGioHang;
 
@@ -41,6 +42,7 @@ public class DetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_detail);
+
         addControls();
         ActionBar();
         getIntentData();
@@ -76,29 +78,6 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        if (item.getItemId() == android.R.id.home) {
-//            Intent intent;
-//            if(loai == 1){
-//                intent = new Intent(this, DienThoaiActivity.class);
-//                intent.putExtra("loai", 1);
-//            }
-//            else if (loai == 2) {
-//                intent = new Intent(this, LaptopActivity.class);
-//                intent.putExtra("loai", 2);
-//            }
-//            else {
-//                intent = new Intent(this, MainActivity.class);
-//            }
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-//            startActivity(intent);
-//            finish();
-//            return true;
-//        }
-//        return super.onOptionsItemSelected(item);
-//    }
-
     private void addControls() {
         toolBarChiTietSP = findViewById(R.id.toolBarChiTietSP);
         txtTenChiTietSP = findViewById(R.id.txtTenChiTietSP);
@@ -118,7 +97,8 @@ public class DetailActivity extends AppCompatActivity {
         btnThemVaoGioHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                themGioHang();
+                addGioHang();
+                setActiveButton(btnThemVaoGioHang);
             }
         });
         frameLayoutGioHang.setOnClickListener(new View.OnClickListener() {
@@ -137,7 +117,7 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void themGioHang(){
+    private void addGioHang(){
         if(Utils.dsShoppingCart.size() > 0){
             boolean flag = false;
             int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
@@ -172,6 +152,14 @@ public class DetailActivity extends AppCompatActivity {
         notificationBadge.setText(String.valueOf(Utils.dsShoppingCart.size()));
     }
 
+    private void setActiveButton(Button button) {
+        btnThemVaoGioHang.setBackgroundResource(R.drawable.button_inactive);
+
+        btnThemVaoGioHang.setTextColor(getColor(android.R.color.black));
+
+        button.setBackgroundResource(R.drawable.button_active);
+        button.setTextColor(getColor(android.R.color.white));
+    }
     @Override
     protected void onResume() {
         super.onResume();

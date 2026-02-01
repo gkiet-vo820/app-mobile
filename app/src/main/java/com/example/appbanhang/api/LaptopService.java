@@ -5,6 +5,7 @@ import android.widget.Toast;
 
 import com.example.appbanhang.adapter.LaptopAdapter;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.util.GetApi;
 
 import java.util.List;
 
@@ -12,9 +13,8 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
 
-
 public class LaptopService {
-    private ProductApi productApi;
+    private GetApi getApi;
     private Context context;
     private LaptopAdapter adapter;
     private List<Product> dsProduct;
@@ -23,7 +23,7 @@ public class LaptopService {
         this.context = context;
         this.adapter = adapter;
         this.dsProduct = dsProduct;
-        productApi = RetrofitClient.getInstance().create(ProductApi.class);
+        getApi = RetrofitClient.getInstance().create(GetApi.class);
     }
 
     public interface PageCallback {
@@ -31,7 +31,7 @@ public class LaptopService {
     }
     public void getAllLaptop(int loai, int page, int limit, PageCallback callback) {
         compositeDisposable.add(
-                productApi.getProductCategory(loai, page, limit)
+                getApi.getProductCategory(loai, page, limit)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(

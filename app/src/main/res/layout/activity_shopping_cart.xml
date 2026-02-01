@@ -78,16 +78,18 @@
             android:padding="5dp"
             android:layout_marginRight="20dp"/>
     </LinearLayout>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnMuaHang"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="MUA HÀNG"
-        android:textColor="@android:color/black"
+        android:layout_marginBottom="5dp"
         android:background="@drawable/button_inactive"
         android:backgroundTint="@null"
+        android:text="MUA HÀNG"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="10dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"/>
+        tools:layout_editor_absoluteX="20dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

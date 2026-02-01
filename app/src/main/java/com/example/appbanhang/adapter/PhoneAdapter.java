@@ -95,7 +95,6 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
                     if(!isLongClick){
                         Intent intent = new Intent(context, DetailActivity.class);
                         intent.putExtra("chitiet", product);
-//                        intent.putExtra("loai", 1);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         context.startActivity(intent);
                     }

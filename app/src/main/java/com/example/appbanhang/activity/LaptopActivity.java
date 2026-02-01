@@ -38,6 +38,7 @@ public class LaptopActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_laptop);
+
         addControls();
         addEvents();
         ActionBar();
@@ -67,7 +68,6 @@ public class LaptopActivity extends AppCompatActivity {
         laptopAdapter = new LaptopAdapter(this, dsProduct);
         recyclerViewLaptop.setAdapter(laptopAdapter);
         recyclerViewLaptop.setLayoutManager(linearLayoutManager);
-        //recyclerViewLaptop.setLayoutManager(new GridLayoutManager(this,1));
         laptopService = new LaptopService(this,laptopAdapter, dsProduct);
 
 

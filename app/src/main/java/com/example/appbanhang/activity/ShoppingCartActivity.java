@@ -1,5 +1,6 @@
 package com.example.appbanhang.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -7,6 +8,7 @@ import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -28,22 +30,23 @@ public class ShoppingCartActivity extends AppCompatActivity {
     TextView gioHangTrong, txtTongTien, txtChinhSua;
     Toolbar toolbarGioHang;
     RecyclerView recyclerViewGioHang;
-    Button btnMuaHang;
+    AppCompatButton btnMuaHang;
 
     ShoppingCartAdapter shoppingCartAdapter;
-    List<ShoppingCart> shoppingCartList;
 
     boolean isEditing = false;
+    double tongtien;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_shopping_cart);
+
         addControls();
         addEvents();
         ActionBar();
-        tinhTongTien();
+        totalPayment();
     }
 
 
@@ -56,7 +59,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 
 
@@ -86,8 +88,11 @@ public class ShoppingCartActivity extends AppCompatActivity {
         btnMuaHang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent = new Intent(ShoppingCartActivity.this, PaymentActivity.class);
+                intent.putExtra("tongtien", tongtien);
+                startActivity(intent);
                 setActiveButton(btnMuaHang);
+
             }
         });
 
@@ -103,8 +108,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
         });
     }
 
-    private void tinhTongTien(){
-        double tongtien = 0;
+    private void totalPayment(){
+        tongtien = 0;
         for (int i = 0; i < Utils.dsShoppingCart.size(); i++){
             tongtien += Utils.dsShoppingCart.get(i).getGiasp() * Utils.dsShoppingCart.get(i).getSoluong();
         }
@@ -134,7 +139,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void eventTinhTien(TotalEvent totalEvent){
         if(totalEvent != null){
-            tinhTongTien();
+            totalPayment();
         }
     }
 }

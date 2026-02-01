@@ -15,7 +15,28 @@
         android:theme="@style/Theme.AppBanHang"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.LoginActivity"
+            android:name=".activity.PaymentActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ForgotPasswordActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.ResetPasswordActivity"
+            android:exported="true"
+            android:launchMode="singleTask">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="reset-password"
+                    android:scheme="appbanhang" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.MainActivity"
             android:exported="true" />
         <activity
             android:name=".activity.RegisterActivity"
@@ -33,7 +54,7 @@
             android:name=".activity.PhoneActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.MainActivity"
+            android:name=".activity.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
