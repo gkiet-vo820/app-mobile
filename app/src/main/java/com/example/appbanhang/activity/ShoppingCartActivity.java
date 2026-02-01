@@ -73,17 +73,26 @@ public class ShoppingCartActivity extends AppCompatActivity {
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerViewGioHang.setLayoutManager(layoutManager);
 
-        if(Utils.dsShoppingCart.size() == 0){
-            gioHangTrong.setVisibility(View.VISIBLE);
-        }
-        else{
-            shoppingCartAdapter = new ShoppingCartAdapter(this,Utils.dsShoppingCart);
-            recyclerViewGioHang.setAdapter(shoppingCartAdapter);
-        }
+        shoppingCartAdapter = new ShoppingCartAdapter(this,Utils.dsShoppingCart);
+        recyclerViewGioHang.setAdapter(shoppingCartAdapter);
+        checkEmptyCart();
 
         txtChinhSua = findViewById(R.id.txtChinhSua);
     }
 
+    private void checkEmptyCart(){
+        if(Utils.dsShoppingCart == null || Utils.dsShoppingCart.size() == 0){
+            gioHangTrong.setVisibility(View.VISIBLE);
+            recyclerViewGioHang.setVisibility(View.GONE);
+            btnMuaHang.setEnabled(false);
+            txtTongTien.setText("0Đ");
+        }
+        else{
+            gioHangTrong.setVisibility(View.GONE);
+            recyclerViewGioHang.setVisibility(View.VISIBLE);
+            btnMuaHang.setEnabled(true);
+        }
+    }
     private void addEvents() {
         btnMuaHang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -110,11 +119,13 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     private void totalPayment(){
         tongtien = 0;
-        for (int i = 0; i < Utils.dsShoppingCart.size(); i++){
-            tongtien += Utils.dsShoppingCart.get(i).getGiasp() * Utils.dsShoppingCart.get(i).getSoluong();
+        if(Utils.dsShoppingCart != null) {
+            for (int i = 0; i < Utils.dsShoppingCart.size(); i++) {
+                tongtien += Utils.dsShoppingCart.get(i).getGiasp() * Utils.dsShoppingCart.get(i).getSoluong();
+            }
         }
-        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-        txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
     }
 
     private void setActiveButton(Button button) {
@@ -140,6 +151,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     public void eventTinhTien(TotalEvent totalEvent){
         if(totalEvent != null){
             totalPayment();
+            checkEmptyCart();
         }
     }
 }

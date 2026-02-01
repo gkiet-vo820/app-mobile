@@ -68,7 +68,6 @@ public class PhoneActivity extends AppCompatActivity {
         phoneAdapter = new PhoneAdapter(this, dsProduct);
         recyclerViewDienThoai.setAdapter(phoneAdapter);
         recyclerViewDienThoai.setLayoutManager(linearLayoutManager);
-        //recyclerViewDienThoai.setLayoutManager(new GridLayoutManager(this,1));
         phoneService = new PhoneService(this, phoneAdapter, dsProduct);
 
     }

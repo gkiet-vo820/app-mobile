@@ -72,7 +72,6 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 imageClickListener.onImageClick(v, getAdapterPosition(), 2);
             }
             else if(v == imgDelete) {
-                // Giá trị 3 đại diện cho hành động Xóa
                 imageClickListener.onImageClick(v, getAdapterPosition(), 3);
             }
         }
@@ -116,12 +115,11 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                         shoppingCartList.get(position).setSoluong(soLuongMoi);
                     }
                 }
-                else if(value == 3){ // 4. Xử lý XÓA
+                else if(value == 3){
                     AlertDialog.Builder builder = new AlertDialog.Builder(context);
                     builder.setTitle("Thông báo");
                     builder.setMessage("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?");
                     builder.setPositiveButton("Đồng ý", (dialog, which) -> {
-                        // Xóa khỏi danh sách Utils và danh sách tại chỗ
                         Utils.dsShoppingCart.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, shoppingCartList.size());
