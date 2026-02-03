@@ -7,6 +7,8 @@ import com.example.appbanhang.adapter.MenuAdapter;
 import com.example.appbanhang.model.Menu;
 import com.example.appbanhang.util.GetApi;
 
+import java.util.List;
+
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;
 import io.reactivex.rxjava3.schedulers.Schedulers;
@@ -15,15 +17,18 @@ public class MenuService {
     private GetApi getApi;
     private Context context;
     private MenuAdapter adapter;
+
+    private List<Menu> dsMenu;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public MenuService(Context context, MenuAdapter adapter) {
+    public MenuService(Context context, MenuAdapter adapter, List<Menu> dsMenu) {
         this.context = context;
         this.adapter = adapter;
+        this.dsMenu = dsMenu;
         getApi = RetrofitClient.getInstance().create(GetApi.class);
     }
 
-    public void getAllLoaiSanPham() {
+    public void getAllMenu() {
         compositeDisposable.add(
                 getApi.getAllMenu()
                         .subscribeOn(Schedulers.io())
@@ -31,10 +36,8 @@ public class MenuService {
                         .subscribe(
                                 res -> {
                                     if (res.isSuccess()) {
-                                        adapter.clear();
-                                        for (Menu menu : res.getData()) {
-                                            adapter.add(menu);
-                                        }
+                                        dsMenu.clear();
+                                        dsMenu.addAll(res.getData());
                                         adapter.notifyDataSetChanged();
                                     }
                                 },

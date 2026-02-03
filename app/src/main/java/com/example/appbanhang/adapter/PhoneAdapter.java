@@ -24,12 +24,22 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     Context context;
     List<Product> dsProduct;
 
+    private ItemClickListener itemClickListener;
     private static final int VIEW_TYPE_DATA = 0;
     private static final int VIEW_TYPE_LOADING = 1;
 
     public PhoneAdapter(Context context, List<Product> dsProduct) {
         this.context = context;
         this.dsProduct = dsProduct;
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return dsProduct.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
     }
 
     public class LoadingViewHolder extends RecyclerView.ViewHolder{
@@ -39,7 +49,7 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             progressBar = itemView.findViewById(R.id.progressBar);
         }
     }
-    public class MyViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class MyViewHolder extends RecyclerView.ViewHolder{
         TextView txtTenSpDT, txtGiaSpDT, txtMoTaSpDT;
         ImageView imgDienThoai;
         private ItemClickListener itemClickListener;
@@ -49,15 +59,6 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             txtGiaSpDT = itemView.findViewById(R.id.txtGiaSpDT);
             txtMoTaSpDT = itemView.findViewById(R.id.txtMoTaSpDT);
             imgDienThoai = itemView.findViewById(R.id.imgDienThoai);
-            itemView.setOnClickListener(this);
-        }
-
-        public void setItemClickListener(ItemClickListener itemClickListener){
-            this.itemClickListener = itemClickListener;
-        }
-        @Override
-        public void onClick(View v) {
-            itemClickListener.onClick(v, getAdapterPosition(), false);
         }
     }
     @NonNull
@@ -79,24 +80,20 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
             MyViewHolder myViewHolder = (MyViewHolder) holder;
             Product product = dsProduct.get(position);
             myViewHolder.txtTenSpDT.setText(product.getTensp());
-            String gia = String.valueOf(product.getGia());
-            if(gia != null && !gia.isEmpty()){
+            if(product.getGia() > 0){
                 DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-                myViewHolder.txtGiaSpDT.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
-            }
-            else{
-                myViewHolder.txtGiaSpDT.setText("Giá đang được cập nhật");
+                myViewHolder.txtGiaSpDT.setText("Giá: " + decimalFormat.format(product.getGia()) + "Đ");
+            } else {
+                myViewHolder.txtGiaSpDT.setText("Giá đang cập nhật");
             }
             myViewHolder.txtMoTaSpDT.setText("Mô tả: " + product.getMota());
             Glide.with(context).load(product.getHinhanh()).into(myViewHolder.imgDienThoai);
-            myViewHolder.setItemClickListener(new ItemClickListener() {
+
+            myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
-                public void onClick(View view, int position, boolean isLongClick) {
-                    if(!isLongClick){
-                        Intent intent = new Intent(context, DetailActivity.class);
-                        intent.putExtra("chitiet", product);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(intent);
+                public void onClick(View v) {
+                    if (itemClickListener != null) {
+                        itemClickListener.onClick(v, holder.getAdapterPosition(), false);
                     }
                 }
             });
@@ -108,17 +105,7 @@ public class PhoneAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> 
     }
 
     @Override
-    public int getItemViewType(int position) {
-        return dsProduct.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
-    }
-
-
-
-    @Override
     public int getItemCount() {
         return dsProduct.size();
     }
-
-
-
 }

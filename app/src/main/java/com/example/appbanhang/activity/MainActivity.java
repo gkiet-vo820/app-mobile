@@ -16,20 +16,27 @@ import android.widget.ViewFlipper;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
+import com.example.appbanhang.adapter.CategoriesAdapter;
+import com.example.appbanhang.adapter.ItemClickListener;
 import com.example.appbanhang.adapter.MenuAdapter;
 import com.example.appbanhang.adapter.ProductAdapter;
+import com.example.appbanhang.api.CategoriesService;
 import com.example.appbanhang.api.MenuService;
 import com.example.appbanhang.api.ProductService;
+import com.example.appbanhang.model.Categories;
 import com.example.appbanhang.model.Menu;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 import com.google.android.material.navigation.NavigationView;
 import com.nex3z.notificationbadge.NotificationBadge;
@@ -41,17 +48,20 @@ public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ViewFlipper viewFlipper;
-    RecyclerView recyclerViewManHinhChinh;
+    RecyclerView recyclerViewManHinhChinh, recyclerMenuManHinhChinh;
     NavigationView navigaionView;
     ListView listViewManHinhChinh;
 
     AppCompatButton btnTatCaSanPham, btnSanPhamMoiNhat, btnSanPhamBanChay;
 
+    CategoriesAdapter categoriesAdapter;
+    List<Categories> dsCategories;
+    CategoriesService categoriesService;
+
+
     MenuAdapter menuAdapter;
     List<Menu> dsMenu;
     MenuService menuService;
-
-
     ProductAdapter productAdapter;
     List<Product> dsProduct;
     ProductService productService;
@@ -59,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
 
     NotificationBadge notificationBadge;
     FrameLayout frameLayoutManHinhChinh;
+
+    SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         addEvents();
         ActionBar();
         ActionViewFlipper();
+        showListCategories();
         showListMenu();
         showListSanPham();
     }
@@ -107,6 +120,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addControls(){
+        checkCart();
+
         drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolBarManHinhChinh);
         viewFlipper = findViewById(R.id.viewFlipper);
@@ -114,15 +129,22 @@ public class MainActivity extends AppCompatActivity {
         navigaionView = findViewById(R.id.navigaionView);
 
         listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
+        dsCategories = new ArrayList<>();
+        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
+        listViewManHinhChinh.setAdapter(categoriesAdapter);
+        categoriesService = new CategoriesService(this, categoriesAdapter);
+
+        recyclerMenuManHinhChinh = findViewById(R.id.recyclerMenuManHinhChinh);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerMenuManHinhChinh.setLayoutManager(linearLayoutManager);
         dsMenu = new ArrayList<>();
         menuAdapter = new MenuAdapter(this, dsMenu);
-        listViewManHinhChinh.setAdapter(menuAdapter);
-        menuService = new MenuService(this, menuAdapter);
+        recyclerMenuManHinhChinh.setAdapter(menuAdapter);
+        menuService = new MenuService(this, menuAdapter, dsMenu);
 
         dsProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(this, dsProduct);
         recyclerViewManHinhChinh.setLayoutManager(new GridLayoutManager(this,2));
-
         recyclerViewManHinhChinh.setAdapter(productAdapter);
         productService = new ProductService(this, productAdapter, dsProduct);
 
@@ -132,22 +154,17 @@ public class MainActivity extends AppCompatActivity {
 
         notificationBadge = findViewById(R.id.menuSoLuong);
         frameLayoutManHinhChinh = findViewById(R.id.frameLayoutManHinhChinh);
-        if(Utils.dsShoppingCart == null){
-            Utils.dsShoppingCart = new ArrayList<>();
-        }
-        else{
-            int totalItem = 0;
-            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
-                totalItem += Utils.dsShoppingCart.get(i).getSoluong();
-            }
-            notificationBadge.setText(String.valueOf(totalItem));
-        }
 
+        searchView = findViewById(R.id.searchView);
+        countTotalItem();
+    }
+    private void checkCart() {
+        if (Utils.dsShoppingCart == null || Utils.dsShoppingCart.isEmpty()) {
+            Utils.dsShoppingCart = CartStorage.loadCart(this);
+        }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
+    private void countTotalItem(){
         int totalItem = 0;
         for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
             totalItem += Utils.dsShoppingCart.get(i).getSoluong();
@@ -155,21 +172,16 @@ public class MainActivity extends AppCompatActivity {
         notificationBadge.setText(String.valueOf(totalItem));
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        menuService.clear();
-    }
-
     private void addEvents(){
         listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
                 switch (position){
                     case 0:
-                        Intent trangchu  = new Intent(MainActivity.this,MainActivity.class);
-                        startActivity(trangchu);
+                        showListCategories();
+                        showListMenu();
+                        showListSanPham();
+                        drawerLayout.closeDrawer(GravityCompat.START);
                         break;
                     case 1:
                         Intent dienthoai  = new Intent(MainActivity.this, PhoneActivity.class);
@@ -187,6 +199,50 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
+        menuAdapter.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position, boolean isLongClick) {
+                switch (position) {
+                    case 0: // Trang chủ
+                        showListCategories();
+                        showListMenu();
+                        showListSanPham();
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+                    case 1: // Đơn hàng
+                        if (Utils.user_current != null) {
+                            Intent order = new Intent(MainActivity.this, OrdersActivity.class);
+                            order.putExtra("id", Utils.user_current.getId());
+                            startActivity(order);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
+                        }
+                        drawerLayout.closeDrawer(GravityCompat.START);
+                        break;
+                }
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(!query.trim().isEmpty()){
+                    searchView.clearFocus();
+                    Intent search = new Intent(MainActivity.this, SearchActivity.class);
+                    search.putExtra("keyword", query);
+                    search.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(search);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         btnTatCaSanPham.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -217,6 +273,13 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(gioHang);
             }
         });
+
+        searchView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
     private void setActiveButton(Button button) {
         btnTatCaSanPham.setBackgroundResource(R.drawable.button_inactive);
@@ -230,8 +293,12 @@ public class MainActivity extends AppCompatActivity {
         button.setBackgroundResource(R.drawable.button_active);
         button.setTextColor(getColor(android.R.color.white));
     }
+    private void showListCategories(){
+        categoriesService.getAllCategories();
+    }
+
     private void showListMenu(){
-        menuService.getAllLoaiSanPham();
+        menuService.getAllMenu();
     }
     private void showListSanPham(){
         productAdapter.setMode(ProductAdapter.MODE_ALL);
@@ -246,5 +313,19 @@ public class MainActivity extends AppCompatActivity {
     private void showListSanPhamBanChay(){
         productAdapter.setMode(ProductAdapter.MODE_HOT);
         productService.getTop10BestSeller();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        countTotalItem();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (categoriesService != null) categoriesService.clear();
+        if (menuService != null) menuService.clear();
+        if (productService != null) productService.clear();
     }
 }

@@ -6,45 +6,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.LaptopActivity">
+    tools:context=".activity.SearchActivity">
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolBarLaptop"
+        android:id="@+id/toolbarTimKiem"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Laptop"
+        app:title="Tìm kiếm"
         android:background="#ff00dfff">
     </androidx.appcompat.widget.Toolbar>
-
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="45dp"
-        android:layout_margin="10dp"
-        android:background="@drawable/search"
-        app:iconifiedByDefault="false"
-        app:queryBackground="@android:color/transparent"
-        app:queryHint="Nhập sản phẩm muốn tìm kiếm"
-        app:searchIcon="@drawable/ic_search"
-        app:layout_constraintTop_toBottomOf="@+id/toolBarLaptop"/>
 
     <TextView
         android:id="@+id/txtSoLuongKetQuaTimKiem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
+        app:layout_constraintTop_toBottomOf="@id/toolbarTimKiem"
         android:text="Kết quả tìm được là: 0"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:textStyle="italic"
         android:textSize="18sp"
         android:padding="5dp"
-        android:textColor="#555555"
-        android:visibility="gone"/>
+        android:textColor="#555555"/>
+
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerViewLaptop"
+        android:id="@+id/recyclerViewTimKiem"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintTop_toBottomOf="@+id/txtSoLuongKetQuaTimKiem"

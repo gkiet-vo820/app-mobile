@@ -3,11 +3,11 @@ package com.example.appbanhang.model;
 public class ShoppingCart {
     private int id;
     private String tensp;
-    private double giasp;
+    private long giasp;
     private String hinhsp;
     private int soluong;
 
-    private boolean isSelected;
+    private boolean isSelected = true;
 
     public ShoppingCart() {
     }
@@ -28,11 +28,11 @@ public class ShoppingCart {
         this.tensp = tensp;
     }
 
-    public double getGiasp() {
+    public long getGiasp() {
         return giasp;
     }
 
-    public void setGiasp(double giasp) {
+    public void setGiasp(long giasp) {
         this.giasp = giasp;
     }
 

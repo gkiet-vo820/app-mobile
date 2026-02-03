@@ -17,6 +17,7 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.ShoppingCartAdapter;
 import com.example.appbanhang.model.ShoppingCart;
 import com.example.appbanhang.model.eventbus.TotalEvent;
+import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -24,6 +25,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ShoppingCartActivity extends AppCompatActivity {
@@ -35,7 +37,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
     ShoppingCartAdapter shoppingCartAdapter;
 
     boolean isEditing = false;
-    double tongtien;
+    long tongtien;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,8 +63,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
         });
     }
 
-
     private void addControls(){
+        checkCart();
+
         gioHangTrong = findViewById(R.id.txtGioHangTrong);
         toolbarGioHang = findViewById(R.id.toolbarGioHang);
         recyclerViewGioHang = findViewById(R.id.recyclerViewGioHang);
@@ -80,6 +83,19 @@ public class ShoppingCartActivity extends AppCompatActivity {
         txtChinhSua = findViewById(R.id.txtChinhSua);
         txtChonTatCa = findViewById(R.id.txtChonTatCa);
         txtXoaTatCa = findViewById(R.id.txtXoaTatCa);
+
+    }
+
+    private void checkCart() {
+        if (Utils.dsShoppingCart == null || Utils.dsShoppingCart.isEmpty()) {
+            Utils.dsShoppingCart = CartStorage.loadCart(this);
+        }
+        if (Utils.dsShoppingCart != null) {
+            for (ShoppingCart item : Utils.dsShoppingCart) {
+                item.setSelected(true);
+            }
+            CartStorage.saveCart(this, Utils.dsShoppingCart);
+        }
     }
 
     private void checkEmptyCart(){
@@ -95,6 +111,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             btnMuaHang.setEnabled(true);
         }
     }
+
     private void addEvents() {
         btnMuaHang.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,7 +123,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
             }
         });
-
         txtChinhSua.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -124,7 +140,6 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 }
             }
         });
-
         txtChonTatCa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -134,16 +149,17 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 shoppingCartAdapter.notifyDataSetChanged();
             }
         });
-
         txtXoaTatCa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 for (int i = Utils.dsShoppingCart.size() - 1; i >= 0; i--) {
                     if (Utils.dsShoppingCart.get(i).isSelected()) {
                         Utils.dsShoppingCart.remove(i);
+
                     }
                 }
                 shoppingCartAdapter.notifyDataSetChanged();
+                CartStorage.saveCart(ShoppingCartActivity.this, Utils.dsShoppingCart);
                 EventBus.getDefault().postSticky(new TotalEvent());
             }
         });
@@ -151,9 +167,9 @@ public class ShoppingCartActivity extends AppCompatActivity {
 
     private void totalPayment(){
         tongtien = 0;
-        if(Utils.dsShoppingCart != null) {
-            for (int i = 0; i < Utils.dsShoppingCart.size(); i++) {
-                tongtien += Utils.dsShoppingCart.get(i).getGiasp() * Utils.dsShoppingCart.get(i).getSoluong();
+        for (ShoppingCart item : Utils.dsShoppingCart) {
+            if (item.isSelected()) {
+                tongtien += item.getGiasp() * item.getSoluong();
             }
         }
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
@@ -168,10 +184,12 @@ public class ShoppingCartActivity extends AppCompatActivity {
         button.setBackgroundResource(R.drawable.button_active);
         button.setTextColor(getColor(android.R.color.white));
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         EventBus.getDefault().register(this);
+
     }
 
     @Override
@@ -179,6 +197,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
         EventBus.getDefault().unregister(this);
         super.onStop();
     }
+
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     public void eventTinhTien(TotalEvent totalEvent){
         if(totalEvent != null){

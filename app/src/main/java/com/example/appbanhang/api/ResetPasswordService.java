@@ -32,14 +32,10 @@ public class ResetPasswordService {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    Toast.makeText(context,
-                                            res.getMessage(),
-                                            Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, res.getMessage(), Toast.LENGTH_LONG).show();
                                 },
                                 err -> {
-                                    Toast.makeText(context,
-                                            "Đổi mật khẩu thất bại",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show();
                                 }
                         )
         );

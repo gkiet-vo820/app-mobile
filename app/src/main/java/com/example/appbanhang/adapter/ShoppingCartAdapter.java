@@ -16,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.ShoppingCart;
 import com.example.appbanhang.model.eventbus.TotalEvent;
+import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -94,9 +95,10 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
         holder.txtTenGiaSp_GioHang.setText("Giá: " + decimalFormat.format(shoppingCart.getGiasp()) + "Đ");
 
-        double tongTien = shoppingCart.getGiasp() * shoppingCart.getSoluong();
+        long tongTien = shoppingCart.getGiasp() * shoppingCart.getSoluong();
         holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(tongTien) + "Đ");
         Glide.with(context).load(shoppingCart.getHinhsp()).into(holder.imgGioHang);
+
 
         if (isEditMode) {
             holder.imgDelete.setVisibility(View.VISIBLE);
@@ -107,8 +109,12 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             holder.chkItem.setVisibility(View.GONE);
         }
 
+        holder.chkItem.setOnCheckedChangeListener(null);
+        holder.chkItem.setChecked(shoppingCart.isSelected());
+
         holder.chkItem.setOnCheckedChangeListener((buttonView, isChecked) -> {
             shoppingCart.setSelected(isChecked);
+            CartStorage.saveCart(context, Utils.dsShoppingCart);
             EventBus.getDefault().postSticky(new TotalEvent());
         });
         holder.setImageClickListener(new ImageClickListener() {
@@ -131,7 +137,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                     builder.setTitle("Thông báo");
                     builder.setMessage("Bạn có muốn xóa sản phẩm này khỏi giỏ hàng?");
                     builder.setPositiveButton("Đồng ý", (dialog, which) -> {
-                        Utils.dsShoppingCart.remove(position);
+                        shoppingCartList.remove(position);
                         notifyItemRemoved(position);
                         notifyItemRangeChanged(position, shoppingCartList.size());
                         EventBus.getDefault().postSticky(new TotalEvent());
@@ -141,7 +147,7 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
                 }
                 if (value != 3) {
                     holder.txtSoLuongSP_GioHang.setText(String.valueOf(shoppingCartList.get(position).getSoluong()));
-                    double giaMoi = shoppingCartList.get(position).getSoluong() * shoppingCartList.get(position).getGiasp();
+                    long giaMoi = shoppingCartList.get(position).getSoluong() * shoppingCartList.get(position).getGiasp();
                     holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(giaMoi) + "Đ");
                     EventBus.getDefault().postSticky(new TotalEvent());
                 }

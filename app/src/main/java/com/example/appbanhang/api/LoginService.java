@@ -36,24 +36,17 @@ public class LoginService {
                                 res -> {
                                     if (res.isSuccess()) {
                                         Paper.book().write("email", email);
-
                                         Utils.user_current = res.getUser();
-
 
                                         Intent intent = new Intent(context, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         context.startActivity(intent);
-
                                     } else {
-                                        Toast.makeText(context,
-                                                "Sai email hoặc mật khẩu",
-                                                Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Sai email hoặc mật khẩu", Toast.LENGTH_SHORT).show();
                                     }
                                 },
                                 err -> {
-                                    Toast.makeText(context,
-                                            "Lỗi server",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context,"Lỗi server", Toast.LENGTH_SHORT).show();
                                 }
                         )
         );

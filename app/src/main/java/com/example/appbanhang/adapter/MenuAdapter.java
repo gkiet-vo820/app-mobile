@@ -8,48 +8,61 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.Menu;
 
 import java.util.List;
 
-public class MenuAdapter extends ArrayAdapter<Menu> {
-
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
     Context context;
+    private List<Menu> dsMenu;
 
-    public MenuAdapter(Context context, List<Menu> data) {
-        super(context, 0, data);
+    private ItemClickListener itemClickListener;
+    public MenuAdapter(Context context, List<Menu> dsMenu){
         this.context = context;
+        this.dsMenu = dsMenu;
+    }
+    public void setItemClickListener(ItemClickListener itemClickListener){
+        this.itemClickListener = itemClickListener;
     }
 
-    static class ViewHolder {
-        TextView txtTenSp;
+    public class MyViewHolder extends RecyclerView.ViewHolder {
+        TextView txtTenMenu;
         ImageView imgHinhAnh;
+
+
+        public MyViewHolder(@NonNull View itemView) {
+            super(itemView);
+            txtTenMenu = itemView.findViewById(R.id.txtTenMenu);
+            imgHinhAnh = itemView.findViewById(R.id.imgHinhAnh);
+        }
+    }
+    @NonNull
+    @Override
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu, parent, false);
+        return new MyViewHolder(view);
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder viewHolder;
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+        Menu menu = dsMenu.get(position);
+        holder.txtTenMenu.setText(menu.getName());
+        Glide.with(context).load(menu.getImage()).into(holder.imgHinhAnh);
 
-        if (convertView == null) {
-            viewHolder = new ViewHolder();
-            LayoutInflater inflater = LayoutInflater.from(context);
-            convertView = inflater.inflate(R.layout.item_menu, parent, false);
+        holder.itemView.setOnClickListener(v -> {
+            if (itemClickListener != null) {
+                itemClickListener.onClick(v, position, false);
+            }
+        });
+    }
 
-            viewHolder.txtTenSp = convertView.findViewById(R.id.txtTenSp);
-            viewHolder.imgHinhAnh = convertView.findViewById(R.id.imgHinhAnh);
-
-            convertView.setTag(viewHolder);
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
-
-        Menu menu = getItem(position);
-        if (menu != null) {
-            viewHolder.txtTenSp.setText(menu.getTensanpham());
-            Glide.with(context).load(menu.getHinhanh()).into(viewHolder.imgHinhAnh);
-        }
-        return convertView;
+    @Override
+    public int getItemCount() {
+        return dsMenu.size();
     }
 }

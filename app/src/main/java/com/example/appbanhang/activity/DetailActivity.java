@@ -19,10 +19,12 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.ShoppingCart;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
     Toolbar toolBarChiTietSP;
@@ -52,15 +54,13 @@ public class DetailActivity extends AppCompatActivity {
     private void getIntentData(){
         Intent intent = getIntent();
         product = (Product) intent.getSerializableExtra("chitiet");
+        if (product == null) {
+            finish();
+            return;
+        }
         txtTenChiTietSP.setText(product.getTensp());
-        String gia = String.valueOf(product.getGia());
-        if(gia != null && !gia.isEmpty()){
-            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-            txtGiaChiTietSP.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
-        }
-        else{
-            txtGiaChiTietSP.setText("Giá đang được cập nhật");
-        }
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        txtGiaChiTietSP.setText("Giá: " + decimalFormat.format(product.getGia()) + "Đ");
         txtMoTaChiTietSP.setText(product.getMota());
         Glide.with(this).load(product.getHinhanh()).into(imgChiTietSP);
         Integer[] so = new Integer[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
@@ -79,6 +79,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void addControls() {
+        checkCart();
+
         toolBarChiTietSP = findViewById(R.id.toolBarChiTietSP);
         txtTenChiTietSP = findViewById(R.id.txtTenChiTietSP);
         txtGiaChiTietSP = findViewById(R.id.txtGiaChiTietSP);
@@ -91,6 +93,12 @@ public class DetailActivity extends AppCompatActivity {
 
         notificationBadge = findViewById(R.id.menuSoLuong);
 
+    }
+
+    private void checkCart() {
+        if (Utils.dsShoppingCart == null || Utils.dsShoppingCart.isEmpty()) {
+            Utils.dsShoppingCart = CartStorage.loadCart(this);
+        }
     }
 
     private void addEvents(){
@@ -117,39 +125,38 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 
-    private void addGioHang(){
-        if(Utils.dsShoppingCart.size() > 0){
-            boolean flag = false;
-            int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
-                if(Utils.dsShoppingCart.get(i).getId() == product.getId()){
-                    Utils.dsShoppingCart.get(i).setSoluong(soluong + Utils.dsShoppingCart.get(i).getSoluong());
-                    double gia = product.getGia() * Utils.dsShoppingCart.get(i).getSoluong();
-                    Utils.dsShoppingCart.get(i).setGiasp(gia);
-                    flag = true;
-                }
-            }
-            if(flag == false){
-                double gia = product.getGia() * soluong;
-                ShoppingCart shoppingCart = new ShoppingCart();
-                shoppingCart.setTensp(product.getTensp());
-                shoppingCart.setGiasp(gia);
-                shoppingCart.setHinhsp(product.getHinhanh());
-                shoppingCart.setSoluong(soluong);
-                Utils.dsShoppingCart.add(shoppingCart);
+    private void addGioHang() {
+        int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
+        for (ShoppingCart item : Utils.dsShoppingCart) {
+            if (item.getId() == (product.getId())) {
+                item.setSoluong(item.getSoluong() + soluong);
+                item.setSelected(true);
+                CartStorage.saveCart(this, Utils.dsShoppingCart);
+                updateBadge();
+                return;
             }
         }
-        else{
-            int soluong = Integer.parseInt(spinner.getSelectedItem().toString());
-            double gia = product.getGia() * soluong;
-            ShoppingCart shoppingCart = new ShoppingCart();
-            shoppingCart.setTensp(product.getTensp());
-            shoppingCart.setGiasp(gia);
-            shoppingCart.setHinhsp(product.getHinhanh());
-            shoppingCart.setSoluong(soluong);
-            Utils.dsShoppingCart.add(shoppingCart);
+
+        ShoppingCart shoppingCart = new ShoppingCart();
+        shoppingCart.setId(product.getId());
+        shoppingCart.setTensp(product.getTensp());
+        shoppingCart.setGiasp(product.getGia());
+        shoppingCart.setHinhsp(product.getHinhanh());
+        shoppingCart.setSoluong(soluong);
+
+        shoppingCart.setSelected(true);
+        Utils.dsShoppingCart.add(shoppingCart);
+        CartStorage.saveCart(this, Utils.dsShoppingCart);
+        updateBadge();
+    }
+
+
+    private void updateBadge() {
+        int totalItem = 0;
+        for (ShoppingCart item : Utils.dsShoppingCart) {
+            totalItem += item.getSoluong();
         }
-        notificationBadge.setText(String.valueOf(Utils.dsShoppingCart.size()));
+        notificationBadge.setText(String.valueOf(totalItem));
     }
 
     private void setActiveButton(Button button) {
@@ -163,13 +170,6 @@ public class DetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(Utils.dsShoppingCart != null){
-            int totalItem = 0;
-            for(int i = 0; i < Utils.dsShoppingCart.size(); i++){
-                totalItem += Utils.dsShoppingCart.get(i).getSoluong();
-            }
-            notificationBadge.setText(String.valueOf(totalItem));
-        }
-
+        updateBadge();
     }
 }

@@ -53,6 +53,7 @@
             android:layout_height="wrap_content"
             android:hint="Mật khẩu"
             android:inputType="textPassword"
+            android:imeOptions="actionDone"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"/>
     </com.google.android.material.textfield.TextInputLayout>
@@ -88,7 +89,7 @@
             android:id="@+id/txtDangKy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/dangki"
+            android:text="@string/dangky"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="#74b9ff"

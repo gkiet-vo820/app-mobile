@@ -1,19 +1,18 @@
 package com.example.appbanhang.model.response;
 
 import com.example.appbanhang.model.Categories;
-import com.example.appbanhang.model.Menu;
 
 import java.util.List;
 
-public class MenuResponse {
+public class CategoriesResponse {
     private boolean success;
-    private List<Menu> data;
+    private List<Categories> data;
 
     public boolean isSuccess() {
         return success;
     }
 
-    public List<Menu> getData() {
+    public List<Categories> getData() {
         return data;
     }
 }

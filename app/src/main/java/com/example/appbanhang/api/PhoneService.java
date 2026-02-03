@@ -1,6 +1,8 @@
 package com.example.appbanhang.api;
 
 import android.content.Context;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.appbanhang.adapter.PhoneAdapter;
@@ -18,6 +20,7 @@ public class PhoneService {
     private Context context;
     private PhoneAdapter adapter;
     private List<Product> dsProduct;
+    private TextView txtSoLuongKetQuaTimKiem;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public PhoneService(Context context, PhoneAdapter adapter, List<Product> dsProduct) {
@@ -25,6 +28,11 @@ public class PhoneService {
         this.adapter = adapter;
         this.dsProduct = dsProduct;
         getApi = RetrofitClient.getInstance().create(GetApi.class);
+    }
+
+    public PhoneService(Context context, PhoneAdapter adapter, List<Product> dsProduct, TextView txtSoLuongKetQuaTimKiem) {
+        this(context, adapter, dsProduct);
+        this.txtSoLuongKetQuaTimKiem = txtSoLuongKetQuaTimKiem;
     }
 
     public interface PageCallback {
@@ -38,14 +46,68 @@ public class PhoneService {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    if (res.isSuccess()) {
-                                        if (page == 0) dsProduct.clear();
-                                        dsProduct.addAll(res.getData());
-                                        adapter.notifyDataSetChanged();
+                                    if (dsProduct.size() > 0 && dsProduct.get(dsProduct.size() - 1) == null) {
+                                        dsProduct.remove(dsProduct.size() - 1);
+                                        adapter.notifyItemRemoved(dsProduct.size());
+                                    }
+                                    if (res.isSuccess() && res.getData() != null) {
+                                        if (page == 1) {
+                                            dsProduct.clear();
+                                            dsProduct.addAll(res.getData());
+                                            adapter.notifyDataSetChanged();
+                                        } else {
+                                            int positionStart = dsProduct.size();
+                                            dsProduct.addAll(res.getData());
+                                            adapter.notifyItemRangeInserted(positionStart, res.getData().size());
+                                        }
                                         callback.onResult(res.getTotalPage(), res.getData().size());
+                                    } else {
+                                        Toast.makeText(context, "Không còn sản phẩm", Toast.LENGTH_SHORT).show();
+                                        callback.onResult(0, 0);
                                     }
                                 },
-                                err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
+                                err -> {
+                                    if (dsProduct.size() > 0 && dsProduct.get(dsProduct.size() - 1) == null) {
+                                        dsProduct.remove(dsProduct.size() - 1);
+                                        adapter.notifyItemRemoved(dsProduct.size());
+                                    }
+                                    Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show();
+                                }
+                        )
+        );
+    }
+
+    public void searchDienThoai(String keyword, int loai) {
+        compositeDisposable.add(
+                getApi.searchProductCategory(keyword, loai)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(
+                                res -> {
+                                    dsProduct.clear();
+                                    if (res.isSuccess() && res.getData() != null) {
+                                        dsProduct.addAll(res.getData());
+                                    }
+                                    adapter.notifyDataSetChanged();
+
+                                    if (txtSoLuongKetQuaTimKiem != null) {
+                                        txtSoLuongKetQuaTimKiem.setVisibility(View.VISIBLE);
+                                        if (res.isSuccess() && res.getData() != null && res.getData().size() > 0) {
+                                            txtSoLuongKetQuaTimKiem.setText("Kết quả tìm kiếm được là: " +
+                                                    res.getData().size() + " sản phẩm");
+                                        } else {
+                                            txtSoLuongKetQuaTimKiem.setText("Không tìm thấy kết quả cho '" + keyword + "'");
+                                            Toast.makeText(context, "Không tìm thấy sản phẩm", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+                                },
+                                err -> {
+                                    Toast.makeText(context, "Lỗi kết nối server", Toast.LENGTH_SHORT).show();
+                                    if (txtSoLuongKetQuaTimKiem != null) {
+                                        txtSoLuongKetQuaTimKiem.setVisibility(View.GONE);
+                                    }
+                                }
+
                         )
         );
     }

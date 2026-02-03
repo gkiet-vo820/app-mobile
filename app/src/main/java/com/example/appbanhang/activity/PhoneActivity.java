@@ -1,16 +1,20 @@
 package com.example.appbanhang.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.adapter.ItemClickListener;
 import com.example.appbanhang.adapter.PhoneAdapter;
 import com.example.appbanhang.api.PhoneService;
 import com.example.appbanhang.model.Product;
@@ -19,6 +23,9 @@ import java.util.List;
 
 public class PhoneActivity extends AppCompatActivity {
 
+    TextView txtSoLuongKetQuaTimKiem;
+
+    SearchView searchView;
     Toolbar toolBarDienThoai;
     RecyclerView recyclerViewDienThoai;
     PhoneAdapter phoneAdapter;
@@ -28,8 +35,9 @@ public class PhoneActivity extends AppCompatActivity {
     LinearLayoutManager linearLayoutManager;
     boolean isLoading = false;
     boolean isLastPage = false;
+    boolean isSearching = false;
 
-    int page = 0, limit = 10, totalPage = 1;
+    int page = 1, limit = 10, totalPage = 1;
     int loai;
 
     @Override
@@ -57,10 +65,12 @@ public class PhoneActivity extends AppCompatActivity {
         });
     }
 
-
     private void addControls(){
         toolBarDienThoai = findViewById(R.id.toolBarDienThoai);
         recyclerViewDienThoai = findViewById(R.id.recyclerViewDienThoai);
+
+        searchView = findViewById(R.id.searchView);
+        txtSoLuongKetQuaTimKiem = findViewById(R.id.txtSoLuongKetQuaTimKiem);
 
         linearLayoutManager = new LinearLayoutManager(this);
 
@@ -68,13 +78,9 @@ public class PhoneActivity extends AppCompatActivity {
         phoneAdapter = new PhoneAdapter(this, dsProduct);
         recyclerViewDienThoai.setAdapter(phoneAdapter);
         recyclerViewDienThoai.setLayoutManager(linearLayoutManager);
-        phoneService = new PhoneService(this, phoneAdapter, dsProduct);
+        phoneService = new PhoneService(this, phoneAdapter, dsProduct, txtSoLuongKetQuaTimKiem);
 
-    }
 
-    protected void onDestroy() {
-        super.onDestroy();
-        phoneService.clear();
     }
 
     private void addEvents(){
@@ -87,43 +93,82 @@ public class PhoneActivity extends AppCompatActivity {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                if(isLoading == false && isLastPage == false && page < totalPage - 1){
-                    if(linearLayoutManager.findLastVisibleItemPosition() == dsProduct.size() - 1){
-                        isLoading = true;
-                        loadMore();
+                if(!isSearching){
+                    if(isLoading == false && isLastPage == false && page < totalPage){
+                        if(linearLayoutManager.findLastVisibleItemPosition() == dsProduct.size() - 1){
+                            isLoading = true;
+                            loadMore();
+                        }
                     }
                 }
+            }
+        });
+
+        phoneAdapter.setItemClickListener(new ItemClickListener() {
+            @Override
+            public void onClick(View view, int position, boolean isLongClick) {
+                if (!isLongClick) {
+                    Intent intent = new Intent(PhoneActivity.this, DetailActivity.class);
+                    intent.putExtra("chitiet", dsProduct.get(position));
+                    startActivity(intent);
+                }
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(!query.trim().isEmpty()){
+                    isSearching = true;
+                    phoneService.searchDienThoai(query, loai);
+                    searchView.clearFocus();
+                    txtSoLuongKetQuaTimKiem.setVisibility(View.VISIBLE);
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.trim().isEmpty()){
+                    isSearching = false;
+                    showListDienThoai(loai);
+                    txtSoLuongKetQuaTimKiem.setVisibility(View.GONE);
+                }
+                return true;
             }
         });
     }
 
     private void loadMore(){
+        dsProduct.add(null);
+        phoneAdapter.notifyItemInserted(dsProduct.size() - 1);
         page++;
 
-        phoneService.getAllDienThoai(loai, page, limit,
-                (tp, count) -> {
-                    totalPage = tp;
-                    if (page >= totalPage - 1 || count == 0) {
-                        isLastPage = true;
-                    }
-                    isLoading = false;
-                }
-        );
+        phoneService.getAllDienThoai(loai, page, limit, (tp, count) -> {
+            totalPage = tp;
+            if (page >= totalPage) {
+                isLastPage = true;
+            }
+            isLoading = false;
+        });
     }
     private void showListDienThoai(int loai){
-        page = 0;
+        page = 1;
         isLastPage = false;
         isLoading = false;
+        dsProduct.clear();
 
+        phoneService.getAllDienThoai(loai, page, limit, (tp, count) -> {
+            totalPage = tp;
+            if (totalPage <= 1) {
+                isLastPage = true;
+            }
+        });
+    }
 
-        phoneService.getAllDienThoai(loai, page, limit,
-                (tp, count) -> {
-                    totalPage = tp;
-
-                    if (totalPage <= 1 || count == 0) {
-                        isLastPage = true;
-                    }
-                }
-        );
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        phoneService.clear();
     }
 }

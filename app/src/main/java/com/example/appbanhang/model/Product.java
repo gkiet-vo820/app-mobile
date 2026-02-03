@@ -9,7 +9,7 @@ public class Product implements Serializable {
     @SerializedName("name")
     private String tensp;
     @SerializedName("price")
-    private double gia;
+    private long gia;
     @SerializedName("image")
     private String hinhanh;
     @SerializedName("description")
@@ -21,7 +21,7 @@ public class Product implements Serializable {
     @SerializedName("soldQuantity")
     private int soluongban;
 
-    public Product(int id, String tensp, double gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {
+    public Product(int id, String tensp, long gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {
         this.id = id;
         this.tensp = tensp;
         this.gia = gia;
@@ -51,11 +51,11 @@ public class Product implements Serializable {
         this.tensp = tensp;
     }
 
-    public double getGia() {
+    public long getGia() {
         return gia;
     }
 
-    public void setGia(double gia) {
+    public void setGia(long gia) {
         this.gia = gia;
     }
 

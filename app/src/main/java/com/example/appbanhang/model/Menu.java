@@ -1,18 +1,14 @@
 package com.example.appbanhang.model;
 
-import com.google.gson.annotations.SerializedName;
-
 public class Menu {
     private int id;
-    @SerializedName("name")
-    private String tensanpham;
-    @SerializedName("image")
-    private String hinhanh;
+    private String name;
+    private String image;
 
-    public Menu(int id, String tensanpham, String hinhanh) {
+    public Menu(int id, String name, String image) {
         this.id = id;
-        this.tensanpham = tensanpham;
-        this.hinhanh = hinhanh;
+        this.name = name;
+        this.image = image;
     }
 
     public Menu() {
@@ -26,19 +22,19 @@ public class Menu {
         this.id = id;
     }
 
-    public String getTensanpham() {
-        return tensanpham;
+    public String getName() {
+        return name;
     }
 
-    public void setTensanpham(String tensanpham) {
-        this.tensanpham = tensanpham;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getHinhanh() {
-        return hinhanh;
+    public String getImage() {
+        return image;
     }
 
-    public void setHinhanh(String hinhanh) {
-        this.hinhanh = hinhanh;
+    public void setImage(String image) {
+        this.image = image;
     }
 }

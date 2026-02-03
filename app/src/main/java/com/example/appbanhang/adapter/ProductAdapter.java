@@ -79,7 +79,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         String gia = String.valueOf(product.getGia());
         if (gia != null && !gia.isEmpty()) {
             DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-            holder.txtGiaSp.setText("Giá: " + decimalFormat.format(Double.parseDouble(gia)) + "Đ");
+            holder.txtGiaSp.setText("Giá: " + decimalFormat.format(Long.parseLong(gia)) + "Đ");
         } else {
             holder.txtGiaSp.setText("Giá: đang cập nhật");
         }

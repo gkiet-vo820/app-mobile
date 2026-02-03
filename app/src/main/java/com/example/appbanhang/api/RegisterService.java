@@ -36,15 +36,11 @@ public class RegisterService {
                                         Intent intent = new Intent(context, LoginActivity.class);
                                         context.startActivity(intent);
                                     } else {
-                                        Toast.makeText(context,
-                                                "Đăng ký thất bại",
-                                                Toast.LENGTH_SHORT).show();
+                                        Toast.makeText(context, "Đăng ký thất bại", Toast.LENGTH_SHORT).show();
                                     }
                                 },
                                 err -> {
-                                    Toast.makeText(context,
-                                            "Lỗi server",
-                                            Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show();
                                 }
                         )
         );
