@@ -97,21 +97,19 @@ public class ProductService {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    if (res.isSuccess()) {
-                                        dsProduct.clear();
+                                    dsProduct.clear();
+                                    if (res.isSuccess() && res.getData() != null) {
                                         dsProduct.addAll(res.getData());
-                                        adapter.notifyDataSetChanged();
-
-                                        if(txtSoLuongKetQuaTimKiem != null){
+                                        if (txtSoLuongKetQuaTimKiem != null) {
                                             txtSoLuongKetQuaTimKiem.setText("Kết quả tìm kiếm được là: " +
-                                                                        res.getData().size() + " sản phẩm");
+                                                            res.getData().size() + " sản phẩm");
+                                        }
+                                    } else {
+                                        if (txtSoLuongKetQuaTimKiem != null) {
+                                            txtSoLuongKetQuaTimKiem.setText("Không tìm thấy kết quả cho '" + keyword + "'");
                                         }
                                     }
-                                    else {
-                                        dsProduct.clear();
-                                        adapter.notifyDataSetChanged();
-                                        Toast.makeText(context, "Rất tiếc, không tìm thấy: " + keyword, Toast.LENGTH_LONG).show();
-                                    }
+                                    adapter.notifyDataSetChanged();
                                 },
                                 err -> Toast.makeText(context, "Lỗi server", Toast.LENGTH_SHORT).show()
                         )
