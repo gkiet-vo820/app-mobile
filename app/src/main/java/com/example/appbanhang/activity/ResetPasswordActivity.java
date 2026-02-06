@@ -1,32 +1,27 @@
 package com.example.appbanhang.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
-import android.widget.EditText;
+import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.appbanhang.R;
 import com.example.appbanhang.api.ResetPasswordService;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class ResetPasswordActivity extends AppCompatActivity {
-    TextInputEditText edtPassword, edtRePassword;
+    TextInputEditText edtNewPassword, edtReNewPassword;
     AppCompatButton btnDoiMatKhau;
-    TextView txtQuayLai;
+    TextView txtQuayLai, txtQuayLaiDangNhap;
+
     ResetPasswordService resetPasswordService;
-    String token;
+    String email, otp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,35 +30,21 @@ public class ResetPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_reset_password);
 
         addControls();
-        getIntentData(getIntent());
         addEvents();
     }
 
-    @Override
-    protected void onNewIntent(@NonNull Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent);
-        getIntentData(intent);
-    }
-    private void getIntentData(Intent intent){
-        Uri uri = intent.getData();
-        if(uri != null && uri.getScheme().equals("appbanhang") && uri.getHost().equals("reset-password")){
-            token = uri.getQueryParameter("token");
-        }
-        if (token == null || token.isEmpty()) {
-            Toast.makeText(this, "Token không hợp lệ", Toast.LENGTH_LONG).show();
-            finish();
-            return;
-        }
-    }
+
+
     private void addControls(){
-        edtPassword = findViewById(R.id.edtPassword);
-        edtRePassword = findViewById(R.id.edtRePassword);
+        edtNewPassword = findViewById(R.id.edtNewPassword);
+        edtReNewPassword = findViewById(R.id.edtReNewPassword);
         btnDoiMatKhau = findViewById(R.id.btnDoiMatKhau);
         txtQuayLai = findViewById(R.id.txtQuayLai);
+        txtQuayLaiDangNhap = findViewById(R.id.txtQuayLaiDangNhap);
 
         resetPasswordService = new ResetPasswordService(this);
-
+        email = getIntent().getStringExtra("email");
+        otp = getIntent().getStringExtra("otp");
     }
 
     private void addEvents(){
@@ -79,37 +60,55 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 finish();
             }
         });
+        txtQuayLaiDangNhap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent login = new Intent(ResetPasswordActivity.this, LoginActivity.class);
+                startActivity(login);
+            }
+        });
+
+        edtReNewPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if(actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER)){
+                    resetPassword();
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     private void resetPassword(){
-        String password = edtPassword.getText().toString().trim();
-        String repassword = edtRePassword.getText().toString().trim();
+        String newPassword = edtNewPassword.getText().toString().trim();
+        String newRePassword = edtReNewPassword.getText().toString().trim();
 
-        if (password.isEmpty()) {
-            edtPassword.setError("Vui lòng nhập mật khẩu");
-            edtPassword.requestFocus();
+
+        if (newPassword.isEmpty()) {
+            edtNewPassword.setError("Vui lòng nhập mật khẩu");
+            edtNewPassword.requestFocus();
             return;
         }
-        else if (!password.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.,])[A-Za-z\\d@$!%*?&.,]{8,}$")) {
-            edtPassword.setError("Mật khẩu phải từ 8 ký tự trở lên, gồm chữ hoa, chữ thường, số và ký tự đặc biệt");
-            edtPassword.requestFocus();
+        else if (!newPassword.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.,])[A-Za-z\\d@$!%*?&.,]{8,}$")) {
+            edtNewPassword.setError("Mật khẩu phải từ 8 ký tự trở lên, gồm chữ hoa, chữ thường, số và ký tự đặc biệt");
+            edtNewPassword.requestFocus();
             return;
         }
 
-        else if (repassword.isEmpty()) {
-            edtRePassword.setError("Vui lòng nhập lại mật khẩu");
-            edtRePassword.requestFocus();
+        else if (newRePassword.isEmpty()) {
+            edtReNewPassword.setError("Vui lòng nhập lại mật khẩu");
+            edtReNewPassword.requestFocus();
             return;
         }
-        else if (!password.equals(repassword)) {
-            edtRePassword.setError("Mật khẩu nhập lại không khớp");
-            edtRePassword.requestFocus();
+        else if (!newPassword.equals(newRePassword)) {
+            edtReNewPassword.setError("Mật khẩu nhập lại không khớp");
+            edtReNewPassword.requestFocus();
             return;
         }
         else {
-            resetPasswordService.resetPassword(token, password, repassword);
+            resetPasswordService.resetPassword(email, otp, newPassword, newRePassword);
         }
-
     }
 
     @Override

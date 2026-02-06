@@ -11,6 +11,11 @@ public class Menu {
         this.image = image;
     }
 
+    public Menu(String name, String image) {
+        this.name = name;
+        this.image = image;
+    }
+
     public Menu() {
     }
 

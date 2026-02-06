@@ -5,14 +5,14 @@ import com.google.gson.annotations.SerializedName;
 public class Categories {
     private int id;
     @SerializedName("name")
-    private String tensanpham;
+    private String tenLoai;
     @SerializedName("image")
-    private String hinhanh;
+    private String hinhAnh;
 
-    public Categories(int id, String tensanpham, String hinhanh) {
+    public Categories(int id, String tenLoai, String hinhAnh) {
         this.id = id;
-        this.tensanpham = tensanpham;
-        this.hinhanh = hinhanh;
+        this.tenLoai = tenLoai;
+        this.hinhAnh = hinhAnh;
     }
 
     public Categories() {
@@ -26,19 +26,19 @@ public class Categories {
         this.id = id;
     }
 
-    public String getTensanpham() {
-        return tensanpham;
+    public String getTenLoai() {
+        return tenLoai;
     }
 
-    public void setTensanpham(String tensanpham) {
-        this.tensanpham = tensanpham;
+    public void setTenLoai(String tenLoai) {
+        this.tenLoai = tenLoai;
     }
 
-    public String getHinhanh() {
-        return hinhanh;
+    public String getHinhAnh() {
+        return hinhAnh;
     }
 
-    public void setHinhanh(String hinhanh) {
-        this.hinhanh = hinhanh;
+    public void setHinhAnh(String hinhAnh) {
+        this.hinhAnh = hinhAnh;
     }
 }

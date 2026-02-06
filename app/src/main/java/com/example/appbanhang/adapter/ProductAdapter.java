@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.util.Configure;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -83,7 +84,19 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         } else {
             holder.txtGiaSp.setText("Giá: đang cập nhật");
         }
-        Glide.with(context).load(product.getHinhanh()).into(holder.imgSp);
+        //Glide.with(context).load(product.getHinhanh()).into(holder.imgSp);
+
+        String hinhAnhSp = product.getHinhanh();
+        String fullImageUrl = "";
+
+        if (hinhAnhSp != null) {
+            if (hinhAnhSp.contains("http")) {
+                fullImageUrl = hinhAnhSp;
+            } else {
+                fullImageUrl = Configure.URL  + hinhAnhSp;
+            }
+        }
+        Glide.with(context).load(fullImageUrl).into(holder.imgSp);
 
         holder.setItemClickListener(new ItemClickListener() {
             @Override

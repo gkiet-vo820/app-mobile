@@ -32,7 +32,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
 
     @Override
     public int getItemViewType(int position) {
-        // Nếu item là null thì hiện ProgressBar
         return dsOrders.get(position) == null ? VIEW_TYPE_LOADING : VIEW_TYPE_DATA;
     }
 

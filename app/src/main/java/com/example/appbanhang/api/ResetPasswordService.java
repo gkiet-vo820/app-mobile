@@ -1,8 +1,10 @@
 package com.example.appbanhang.api;
 
 import android.content.Context;
+import android.content.Intent;
 import android.widget.Toast;
 
+import com.example.appbanhang.activity.LoginActivity;
 import com.example.appbanhang.model.request.ResetPasswordRequest;
 import com.example.appbanhang.util.GetApi;
 
@@ -20,9 +22,10 @@ public class ResetPasswordService {
         getApi = RetrofitClient.getInstance().create(GetApi.class);
     }
 
-    public void resetPassword(String token, String password, String rePassword) {
+    public void resetPassword(String email, String otp, String password, String rePassword) {
         ResetPasswordRequest request = new ResetPasswordRequest();
-        request.setToken(token);
+        request.setEmail(email);
+        request.setOtp(otp);
         request.setNewPassword(password);
         request.setReNewPassword(rePassword);
 
@@ -32,7 +35,9 @@ public class ResetPasswordService {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    Toast.makeText(context, res.getMessage(), Toast.LENGTH_LONG).show();
+                                    Intent intent = new Intent(context, LoginActivity.class);
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    context.startActivity(intent);
                                 },
                                 err -> {
                                     Toast.makeText(context, "Đổi mật khẩu thất bại", Toast.LENGTH_SHORT).show();

@@ -36,22 +36,24 @@ import com.example.appbanhang.api.ProductService;
 import com.example.appbanhang.model.Categories;
 import com.example.appbanhang.model.Menu;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.model.User;
 import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import io.paperdb.Paper;
+
 public class MainActivity extends AppCompatActivity {
     DrawerLayout drawerLayout;
     Toolbar toolbar;
     ViewFlipper viewFlipper;
-    RecyclerView recyclerViewManHinhChinh, recyclerMenuManHinhChinh;
+    RecyclerView recyclerViewManHinhChinh, recyclerMenuManHinhChinh, recyclerViewDrawer;
     NavigationView navigaionView;
-    ListView listViewManHinhChinh;
-
     AppCompatButton btnTatCaSanPham, btnSanPhamMoiNhat, btnSanPhamBanChay;
 
     CategoriesAdapter categoriesAdapter;
@@ -59,8 +61,11 @@ public class MainActivity extends AppCompatActivity {
     CategoriesService categoriesService;
 
 
-    MenuAdapter menuAdapter;
-    List<Menu> dsMenu;
+    BottomSheetDialog bottomSheetDialog;
+    ListView listViewSheetCategories;
+
+    MenuAdapter menuAdapter, drawerAdapter;
+    List<Menu> dsMenu, dsDrawerMenu;
     MenuService menuService;
     ProductAdapter productAdapter;
     List<Product> dsProduct;
@@ -78,13 +83,22 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
 
+        Paper.init(this);
+        saveUserLogin();
         addControls();
         addEvents();
         ActionBar();
         ActionViewFlipper();
-        showListCategories();
+
         showListMenu();
         showListSanPham();
+    }
+
+    private void saveUserLogin(){
+        if(Paper.book().read("user") != null){
+            User user = Paper.book().read("user");
+            Utils.user_current = user;
+        }
     }
 
     private void ActionViewFlipper() {
@@ -128,19 +142,32 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewManHinhChinh = findViewById(R.id.recyclerViewManHinhChinh);
         navigaionView = findViewById(R.id.navigaionView);
 
-        listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
-        dsCategories = new ArrayList<>();
-        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
-        listViewManHinhChinh.setAdapter(categoriesAdapter);
-        categoriesService = new CategoriesService(this, categoriesAdapter);
-
         recyclerMenuManHinhChinh = findViewById(R.id.recyclerMenuManHinhChinh);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerMenuManHinhChinh.setLayoutManager(linearLayoutManager);
         dsMenu = new ArrayList<>();
-        menuAdapter = new MenuAdapter(this, dsMenu);
+        menuAdapter = new MenuAdapter(this, dsMenu, false);
         recyclerMenuManHinhChinh.setAdapter(menuAdapter);
         menuService = new MenuService(this, menuAdapter, dsMenu);
+
+        recyclerViewDrawer = findViewById(R.id.recyclerViewDrawer);
+        recyclerViewDrawer.setLayoutManager(new LinearLayoutManager(this));
+        dsDrawerMenu = new ArrayList<>();
+        setupStaticDrawerMenu();// Hàm tự tạo mục Đăng xuất/Admin
+        drawerAdapter = new MenuAdapter(this, dsDrawerMenu, true);
+        recyclerViewDrawer.setAdapter(drawerAdapter);
+
+        bottomSheetDialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_categories, null);
+        bottomSheetDialog.setContentView(view);
+
+        listViewSheetCategories = view.findViewById(R.id.listViewSheetCategories);
+        dsCategories = new ArrayList<>();
+        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
+        listViewSheetCategories.setAdapter(categoriesAdapter);
+
+        categoriesService = new CategoriesService(this, categoriesAdapter);
+        categoriesService.getAllCategories();
 
         dsProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(this, dsProduct);
@@ -158,6 +185,22 @@ public class MainActivity extends AppCompatActivity {
         searchView = findViewById(R.id.searchView);
         countTotalItem();
     }
+
+    private void setupStaticDrawerMenu() {
+        dsDrawerMenu.clear();
+        // Kiểm tra role từ bảng User
+        if(Utils.user_current != null){
+            dsDrawerMenu.add(new Menu("Thông tin cá nhân", ""));
+            dsDrawerMenu.add(new Menu("Lịch sử mua hàng", ""));
+        }
+        if (Utils.user_current != null && Utils.user_current.getRole() == 1) {
+            dsDrawerMenu.add(new Menu("Quản lý hệ thống", ""));
+//            dsDrawerMenu.add(new Menu("Thống kê doanh thu", ""));
+        }
+        dsDrawerMenu.add(new Menu("Liên hệ và hỗ trợ", ""));
+        dsDrawerMenu.add(new Menu("Đăng xuất", ""));
+    }
+
     private void checkCart() {
         if (Utils.dsShoppingCart == null || Utils.dsShoppingCart.isEmpty()) {
             Utils.dsShoppingCart = CartStorage.loadCart(this);
@@ -173,56 +216,82 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void addEvents(){
-        listViewManHinhChinh.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        drawerAdapter.setItemClickListener(new ItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                switch (position){
-                    case 0:
-                        showListCategories();
-                        showListMenu();
-                        showListSanPham();
-                        drawerLayout.closeDrawer(GravityCompat.START);
+            public void onClick(View view, int position, boolean isLongClick) {
+                String action = dsDrawerMenu.get(position).getName();
+
+                switch (action) {
+                    case "Đăng xuất":
+                        Paper.book().delete("user");
+                        Utils.user_current = null;
+                        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
+                        startActivity(logout);
+                        finish();
                         break;
-                    case 1:
-                        Intent dienthoai  = new Intent(MainActivity.this, PhoneActivity.class);
-                        dienthoai.putExtra("loai", 1);
-                        startActivity(dienthoai);
+                    case "Quản lý hệ thống":
+                        startActivity(new Intent(MainActivity.this, ManagerActivity.class));
                         break;
-                    case 2:
-                        Intent laptop  = new Intent(MainActivity.this,LaptopActivity.class);
-                        laptop.putExtra("loai", 2);
-                        startActivity(laptop);
+                    case "Lịch sử mua hàng":
+                        if (Utils.user_current != null) {
+                            Intent order = new Intent(MainActivity.this, OrdersActivity.class);
+                            order.putExtra("id", Utils.user_current.getId());
+                            startActivity(order);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Bạn cần đăng nhập!", Toast.LENGTH_SHORT).show();
+                        }
                         break;
-                    default:
-                        Toast.makeText(MainActivity.this, "Lỗi!!!", Toast.LENGTH_SHORT).show();
+                    case "Thông tin cá nhân":
+                        // Chuyển sang ProfileActivity nếu có
                         break;
                 }
+                drawerLayout.closeDrawer(GravityCompat.START);
             }
         });
 
         menuAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                switch (position) {
-                    case 0: // Trang chủ
-                        showListCategories();
-                        showListMenu();
-                        showListSanPham();
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
-                    case 1: // Đơn hàng
-                        if (Utils.user_current != null) {
-                            Intent order = new Intent(MainActivity.this, OrdersActivity.class);
-                            order.putExtra("id", Utils.user_current.getId());
-                            startActivity(order);
-                        } else {
-                            Toast.makeText(MainActivity.this, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
-                        }
-                        drawerLayout.closeDrawer(GravityCompat.START);
-                        break;
+                String tenMenu = dsMenu.get(position).getName();
+                if (tenMenu.equalsIgnoreCase("Danh mục")) {
+                    openCategoryDialog();
+                } else if (tenMenu.equalsIgnoreCase("Trang chủ")) {
+                    showListSanPham();
+                    setActiveButton(btnTatCaSanPham);
                 }
             }
         });
+
+//        menuAdapter.setItemClickListener(new ItemClickListener() {
+//            @Override
+//            public void onClick(View view, int position, boolean isLongClick) {
+//                switch (position) {
+//                    case 0:
+//                        showListCategories();
+//                        showListMenu();
+//                        showListSanPham();
+//                        drawerLayout.closeDrawer(GravityCompat.START);
+//                        break;
+//                    case 2:
+//                        if (Utils.user_current != null) {
+//                            Intent order = new Intent(MainActivity.this, OrdersActivity.class);
+//                            order.putExtra("id", Utils.user_current.getId());
+//                            startActivity(order);
+//                        } else {
+//                            Toast.makeText(MainActivity.this, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
+//                        }
+//                        drawerLayout.closeDrawer(GravityCompat.START);
+//                        break;
+//
+//                    case 4:
+//                        Paper.book().delete("user");
+//                        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
+//                        startActivity(logout);
+//                        finish();
+//                        break;
+//                }
+//            }
+//        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -281,6 +350,44 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void openCategoryDialog() {
+        if (dsCategories == null || dsCategories.isEmpty()) {
+            Toast.makeText(this, "Đang tải danh mục, vui lòng đợi...", Toast.LENGTH_SHORT).show();
+            categoriesService.getAllCategories();
+            return;
+        }
+        listViewSheetCategories.setOnItemClickListener((parent, view1, position, id) -> {
+            int maLoai = dsCategories.get(position).getId();
+            String tenLoai = dsCategories.get(position).getTenLoai();
+            Intent intent = null;
+            switch (maLoai) {
+                case 1:
+                    intent = new Intent(MainActivity.this, PhoneActivity.class);
+                    break;
+                case 2:
+                    intent = new Intent(MainActivity.this, TabletActivity.class);
+                    break;
+                case 3:
+                    intent = new Intent(MainActivity.this, LaptopActivity.class);
+                    break;
+                default:
+                    Toast.makeText(MainActivity.this, "Vui lòng chọn các mục trên", Toast.LENGTH_SHORT).show();
+                    break;
+            }
+
+            if (intent != null) {
+                intent.putExtra("loai", maLoai);
+                intent.putExtra("tenloai", tenLoai);
+                startActivity(intent);
+                bottomSheetDialog.dismiss();
+            } else {
+                Toast.makeText(MainActivity.this, "Danh mục " + tenLoai + " chưa có Activity xử lý!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        bottomSheetDialog.show();
+    }
+
     private void setActiveButton(Button button) {
         btnTatCaSanPham.setBackgroundResource(R.drawable.button_inactive);
         btnSanPhamMoiNhat.setBackgroundResource(R.drawable.button_inactive);

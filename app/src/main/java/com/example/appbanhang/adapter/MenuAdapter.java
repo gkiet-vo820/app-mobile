@@ -20,11 +20,13 @@ import java.util.List;
 public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> {
     Context context;
     private List<Menu> dsMenu;
+    boolean isDrawer;
 
     private ItemClickListener itemClickListener;
-    public MenuAdapter(Context context, List<Menu> dsMenu){
+    public MenuAdapter(Context context, List<Menu> dsMenu, boolean isDrawer){
         this.context = context;
         this.dsMenu = dsMenu;
+        this.isDrawer = isDrawer;
     }
     public void setItemClickListener(ItemClickListener itemClickListener){
         this.itemClickListener = itemClickListener;
@@ -44,7 +46,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     @NonNull
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu, parent, false);
+        View view;
+        if(isDrawer){
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu_drawer, parent, false);
+        }
+        else {
+            view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_menu, parent, false);
+        }
         return new MyViewHolder(view);
     }
 

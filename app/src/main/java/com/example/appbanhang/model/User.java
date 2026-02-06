@@ -10,6 +10,8 @@ public class User {
     @SerializedName("numberphone")
     private String sdt;
 
+    private String avatar;
+    private int role;
     public User() {
     }
 
@@ -47,6 +49,22 @@ public class User {
 
     public String getSdt() {
         return sdt;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
+    public int getRole() {
+        return role;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
     }
 
     public void setSdt(String sdt) {

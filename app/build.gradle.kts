@@ -41,14 +41,14 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-    //glide
-    implementation("com.github.bumptech.glide:glide:4.12.0")
+    //Glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0")
 
-    //badge
+    //Badge
     implementation("com.nex3z:notification-badge:1.0.4")
 
-    //event bus
+    //Event bus
     implementation("org.greenrobot:eventbus:3.2.0")
 
     //Rxjava
@@ -65,4 +65,13 @@ dependencies {
 
     //Gson
     implementation("com.google.code.gson:gson:2.8.9")
+
+    //Lottie
+    implementation("com.airbnb.android:lottie:6.4.0")
+
+    //neumorphism
+    implementation("com.github.fornewid:neumorphism:0.3.0")
+
+    //gridlayout
+    implementation("androidx.gridlayout:gridlayout:1.0.0")
 }

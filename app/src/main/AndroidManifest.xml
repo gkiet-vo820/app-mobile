@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
 
     <application
         android:allowBackup="true"
@@ -10,37 +12,50 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppBanHang"
         android:usesCleartextTraffic="true">
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".activity.ChangePasswordActivity"
             android:exported="false" />
+        <activity
+            android:name=".activity.VerifyOtpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activity.ManagerActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.AddProductActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.TabletActivity"
+            android:exported="true" />
+        <activity
+            android:name=".activity.SplashActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".activity.SearchActivity"
+            android:exported="true" />
         <activity
             android:name=".activity.OrdersActivity"
             android:exported="false" />
         <activity
             android:name=".activity.PaymentActivity"
-            android:exported="false" />
+            android:exported="true" />
         <activity
             android:name=".activity.ForgotPasswordActivity"
             android:exported="true" />
         <activity
             android:name=".activity.ResetPasswordActivity"
-            android:exported="true"
-            android:launchMode="singleTask">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
-
-                <data
-                    android:host="reset-password"
-                    android:scheme="appbanhang" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
         <activity
             android:name=".activity.MainActivity"
             android:exported="true" />
@@ -61,13 +76,7 @@
             android:exported="true" />
         <activity
             android:name=".activity.LoginActivity"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:exported="true" />
     </application>
 
 </manifest>

@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.DetailOrders;
+import com.example.appbanhang.util.Configure;
 
 import java.util.List;
 
@@ -58,7 +59,19 @@ public class DetailOrdersAdapter extends RecyclerView.Adapter<DetailOrdersAdapte
         DetailOrders detailOrders = dsDetailOrders.get(position);
         holder.txtTenDonHang.setText("Tên đơn hàng: " + detailOrders.getProduct().getTensp());
         holder.txtSoLuongDonHang.setText("Số lượng: " + detailOrders.getQuantity());
-        Glide.with(context).load(detailOrders.getProduct().getHinhanh()).into(holder.imgDonHang);
+        //Glide.with(context).load(detailOrders.getProduct().getHinhanh()).into(holder.imgDonHang);
+
+        String hinhAnhSp = detailOrders.getProduct().getHinhanh();
+        String fullImageUrl = "";
+
+        if (hinhAnhSp != null) {
+            if (hinhAnhSp.contains("http")) {
+                fullImageUrl = hinhAnhSp;
+            } else {
+                fullImageUrl = Configure.URL  + hinhAnhSp;
+            }
+        }
+        Glide.with(context).load(fullImageUrl).into(holder.imgDonHang);
     }
 
     @Override

@@ -14,14 +14,17 @@ public class Product implements Serializable {
     private String hinhanh;
     @SerializedName("description")
     private String mota;
-    @SerializedName("category")
+    @SerializedName("categoryId")
     private int loai;
     @SerializedName("createdAt")
     private String ngaytao;
     @SerializedName("soldQuantity")
     private int soluongban;
 
-    public Product(int id, String tensp, long gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban) {
+    @SerializedName("stockQuantity")
+    private int soluongtonkho;
+
+    public Product(int id, String tensp, long gia, String hinhanh, String mota, int loai, String ngaytao, int soluongban, int soluongtonkho) {
         this.id = id;
         this.tensp = tensp;
         this.gia = gia;
@@ -30,6 +33,7 @@ public class Product implements Serializable {
         this.loai = loai;
         this.ngaytao = ngaytao;
         this.soluongban = soluongban;
+        this.soluongtonkho = soluongtonkho;
     }
 
     public Product() {
@@ -97,5 +101,13 @@ public class Product implements Serializable {
 
     public void setSoluongban(int soluongban) {
         this.soluongban = soluongban;
+    }
+
+    public int getSoluongtonkho() {
+        return soluongtonkho;
+    }
+
+    public void setSoluongtonkho(int soluongtonkho) {
+        this.soluongtonkho = soluongtonkho;
     }
 }

@@ -11,10 +11,18 @@ import com.example.appbanhang.model.response.UserResponse;
 import com.example.appbanhang.model.response.CategoriesResponse;
 import com.example.appbanhang.model.response.ProductResponse;
 
+import java.util.Map;
+
+import io.reactivex.rxjava3.core.Observable;
 import io.reactivex.rxjava3.core.Single;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
 
@@ -43,6 +51,21 @@ public interface GetApi {
     @GET("apiProduct/search-product-category")
     Single<ProductResponse> searchProductCategory(@Query("keyword") String keyword, @Query("category") Integer category);
 
+    @Multipart
+    @POST("apiProduct/add-product")
+    Call<ProductResponse> addProduct(@Part("nameProduct") RequestBody name, @Part("price") RequestBody price,
+                                     @Part MultipartBody.Part image, @Part("description") RequestBody description,
+                                     @Part("categoryId") RequestBody categoryId, @Part("stockQuantity") RequestBody stockQuantity);
+
+    @Multipart
+    @POST("apiProduct/update-product")
+    Call<ProductResponse> updateProduct(@Part("id") RequestBody id, @Part("nameProduct") RequestBody name, @Part("price") RequestBody price,
+                                     @Part MultipartBody.Part image, @Part("description") RequestBody description,
+                                     @Part("categoryId") RequestBody categoryId, @Part("stockQuantity") RequestBody stockQuantity);
+
+    @POST("apiProduct/delete-product")
+    Single<ProductResponse> deleteProduct(@Query("id") Integer id);
+
     @POST("apiUser/register")
     Single<UserResponse> register(@Body RegisterRequest registerRequest);
 
@@ -54,6 +77,9 @@ public interface GetApi {
 
     @POST("apiUser/reset-password")
     Single<UserResponse> resetPassword(@Body ResetPasswordRequest resetPasswordRequest);
+
+    @POST("apiUser/verify-otp")
+    Observable<Map<String, Object>> verifyOtp(@Body Map<String, String> data);
 
     @POST("/apiOrders/checkout")
     Single<OrdersResponse> checkOut(@Body Orders orderRequest);

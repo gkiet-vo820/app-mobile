@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.model.Product;
+import com.example.appbanhang.util.Configure;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -88,7 +89,19 @@ public class LaptopAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
                 myViewHolder.txtGiaSpLT.setText("Giá đang cập nhật");
             }
             myViewHolder.txtMoTaSpLT.setText("Mô tả: " + product.getMota());
-            Glide.with(context).load(product.getHinhanh()).into(myViewHolder.imgLaptop);
+            //Glide.with(context).load(product.getHinhanh()).into(myViewHolder.imgLaptop);
+
+            String hinhAnhSp = product.getHinhanh();
+            String fullImageUrl = "";
+
+            if (hinhAnhSp != null) {
+                if (hinhAnhSp.contains("http")) {
+                    fullImageUrl = hinhAnhSp;
+                } else {
+                    fullImageUrl = Configure.URL  + hinhAnhSp;
+                }
+            }
+            Glide.with(context).load(fullImageUrl).into(myViewHolder.imgLaptop);
 
             myViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override

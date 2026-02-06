@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:background="#ecf0f3"
+    android:orientation="vertical"
+    tools:context=".activity.ManagerActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolBarQuanLy"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="Admin"
+        android:background="#ff00dfff">
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.gridlayout.widget.GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        app:columnCount="2"
+        android:padding="16dp"
+        app:alignmentMode="alignMargins">
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/cardThemSP"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            app:layout_columnWeight="1"
+            style="@style/Widget.Neumorph.CardView"
+            app:neumorph_shapeType="flat"
+            app:neumorph_shadowColorDark="#A3B1C6"
+            app:neumorph_shadowColorLight="#FFFFFF"
+            app:neumorph_shadowElevation="6dp"
+            app:neumorph_backgroundColor="#ecf0f3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_plus_product" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm sản phẩm"
+                    android:textSize="18sp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </soup.neumorphism.NeumorphCardView>
+
+        <soup.neumorphism.NeumorphCardView
+            android:id="@+id/cardThongKe"
+            android:layout_width="0dp"
+            android:layout_height="160dp"
+            app:layout_columnWeight="1"
+            style="@style/Widget.Neumorph.CardView"
+            app:neumorph_shapeType="flat"
+            app:neumorph_shadowColorDark="#A3B1C6"
+            app:neumorph_shadowColorLight="#FFFFFF"
+            app:neumorph_shadowElevation="6dp"
+            app:neumorph_backgroundColor="#ecf0f3">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+                <ImageView
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/ic_revenue" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Doanh thu"
+                    android:textSize="18sp"
+                    android:layout_marginTop="8dp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </soup.neumorphism.NeumorphCardView>
+
+<!--        <soup.neumorphism.NeumorphCardView-->
+<!--            android:id="@+id/cardXoaSP"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="160dp"-->
+<!--            app:layout_columnWeight="1"-->
+<!--            style="@style/Widget.Neumorph.CardView"-->
+<!--            app:neumorph_shapeType="flat"-->
+<!--            app:neumorph_shadowColorDark="#A3B1C6"-->
+<!--            app:neumorph_shadowColorLight="#FFFFFF"-->
+<!--            app:neumorph_shadowElevation="6dp"-->
+<!--            app:neumorph_backgroundColor="#ecf0f3">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:src="@drawable/ic_delete_product" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Xóa sản phẩm"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:textStyle="bold"/>-->
+<!--            </LinearLayout>-->
+<!--        </soup.neumorphism.NeumorphCardView>-->
+
+<!--        <soup.neumorphism.NeumorphCardView-->
+<!--            android:id="@+id/cardSuaSP"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="160dp"-->
+<!--            app:layout_columnWeight="1"-->
+<!--            style="@style/Widget.Neumorph.CardView"-->
+<!--            app:neumorph_shapeType="flat"-->
+<!--            app:neumorph_shadowColorDark="#A3B1C6"-->
+<!--            app:neumorph_shadowColorLight="#FFFFFF"-->
+<!--            app:neumorph_shadowElevation="6dp"-->
+<!--            app:neumorph_backgroundColor="#ecf0f3">-->
+
+<!--            <LinearLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:gravity="center"-->
+<!--                android:orientation="vertical">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:src="@drawable/ic_edit_product" />-->
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:text="Sửa sản phẩm"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:layout_marginTop="8dp"-->
+<!--                    android:textStyle="bold"/>-->
+<!--            </LinearLayout>-->
+<!--        </soup.neumorphism.NeumorphCardView>-->
+    </androidx.gridlayout.widget.GridLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewAdmin"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="10dp">
+
+    </androidx.recyclerview.widget.RecyclerView>
+</LinearLayout>

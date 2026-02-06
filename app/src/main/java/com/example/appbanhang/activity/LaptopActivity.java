@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -48,11 +49,19 @@ public class LaptopActivity extends AppCompatActivity {
         setContentView(R.layout.activity_laptop);
 
         addControls();
+        getIntentData();
         addEvents();
         ActionBar();
+    }
 
-        loai = getIntent().getIntExtra("loai", 2);
-        showListLaptop(loai);
+    private void getIntentData(){
+        //có thể nhận đặt mặc định là 0 và hứng trực tiếp
+        loai = getIntent().getIntExtra("loai", -1);
+        if (loai != -1) {
+            showListLaptop(loai);
+        } else {
+            Toast.makeText(this, "Không tìm thấy loại sản phẩm!", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void ActionBar() {

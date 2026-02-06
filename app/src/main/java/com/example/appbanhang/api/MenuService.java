@@ -17,7 +17,6 @@ public class MenuService {
     private GetApi getApi;
     private Context context;
     private MenuAdapter adapter;
-
     private List<Menu> dsMenu;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 

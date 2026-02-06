@@ -1,8 +1,11 @@
 package com.example.appbanhang.api;
 
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
+import com.example.appbanhang.activity.VerifyOtpActivity;
 import com.example.appbanhang.model.request.ForgotPasswordEmailRequest;
 import com.example.appbanhang.util.GetApi;
 
@@ -30,9 +33,13 @@ public class ForgotPasswordService {
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(
                                 res -> {
-                                    Toast.makeText(context, res.getMessage(), Toast.LENGTH_LONG).show();
+                                    Toast.makeText(context, "Mã OTP đã được gửi!", Toast.LENGTH_SHORT).show();
+                                    Intent intent = new Intent(context, VerifyOtpActivity.class);
+                                    intent.putExtra("email", email);
+                                    context.startActivity(intent);
                                 },
                                 err -> {
+                                    Log.e("API_ERROR", err.getMessage());
                                     Toast.makeText(context,"Lỗi gửi email", Toast.LENGTH_SHORT).show();
                                 }
                         )

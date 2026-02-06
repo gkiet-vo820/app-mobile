@@ -17,6 +17,7 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.model.ShoppingCart;
 import com.example.appbanhang.model.eventbus.TotalEvent;
 import com.example.appbanhang.util.CartStorage;
+import com.example.appbanhang.util.Configure;
 import com.example.appbanhang.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -99,6 +100,17 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
         holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(tongTien) + "Đ");
         Glide.with(context).load(shoppingCart.getHinhsp()).into(holder.imgGioHang);
 
+        String hinhAnhSp = shoppingCart.getHinhsp();
+        String fullImageUrl = "";
+
+        if (hinhAnhSp != null) {
+            if (hinhAnhSp.contains("http")) {
+                fullImageUrl = hinhAnhSp;
+            } else {
+                fullImageUrl = Configure.URL  + hinhAnhSp;
+            }
+        }
+        Glide.with(context).load(fullImageUrl).into(holder.imgGioHang);
 
         if (isEditMode) {
             holder.imgDelete.setVisibility(View.VISIBLE);

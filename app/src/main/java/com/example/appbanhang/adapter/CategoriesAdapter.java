@@ -47,8 +47,8 @@ public class CategoriesAdapter extends ArrayAdapter<Categories> {
 
         Categories categories = getItem(position);
         if (categories != null) {
-            viewHolder.txtTenSp.setText(categories.getTensanpham());
-            Glide.with(context).load(categories.getHinhanh()).into(viewHolder.imgHinhAnh);
+            viewHolder.txtTenSp.setText(categories.getTenLoai());
+            Glide.with(context).load(categories.getHinhAnh()).into(viewHolder.imgHinhAnh);
         }
         return convertView;
     }

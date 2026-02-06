@@ -27,17 +27,22 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class DetailActivity extends AppCompatActivity {
+
+    // Khai báo toolbar
     Toolbar toolBarChiTietSP;
+    FrameLayout frameLayoutGioHang;
+    NotificationBadge notificationBadge;
+
+    // Khai báo tên,.. của sản phẩm và nút
     TextView txtTenChiTietSP, txtGiaChiTietSP, txtMoTaChiTietSP;
     ImageView imgChiTietSP;
     AppCompatButton btnThemVaoGioHang;
     Spinner spinner;
-    FrameLayout frameLayoutGioHang;
 
     Product product;
-    int loai;
+//    int loai;
 
-    NotificationBadge notificationBadge;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,7 @@ public class DetailActivity extends AppCompatActivity {
         addEvents();
     }
 
+    // Nhận từ khóa từ các activity khác truyền qua
     private void getIntentData(){
         Intent intent = getIntent();
         product = (Product) intent.getSerializableExtra("chitiet");
@@ -67,6 +73,8 @@ public class DetailActivity extends AppCompatActivity {
         ArrayAdapter<Integer> adapterSpinner = new ArrayAdapter<>(this,android.R.layout.simple_spinner_dropdown_item, so);
         spinner.setAdapter(adapterSpinner);
     }
+
+    // Hiển thị toolbar
     private void ActionBar() {
         setSupportActionBar(toolBarChiTietSP);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -78,20 +86,26 @@ public class DetailActivity extends AppCompatActivity {
         });
     }
 
+    // Ánh xạ
     private void addControls() {
+        // Kiểm tra giỏ hàng
         checkCart();
 
+        // ánh xạ toolbar
         toolBarChiTietSP = findViewById(R.id.toolBarChiTietSP);
+        frameLayoutGioHang = findViewById(R.id.frameLayoutGioHang);
+        notificationBadge = findViewById(R.id.menuSoLuong);
+
+        // Ánh xạ tên,.. của sản phẩm và nút
         txtTenChiTietSP = findViewById(R.id.txtTenChiTietSP);
         txtGiaChiTietSP = findViewById(R.id.txtGiaChiTietSP);
         txtMoTaChiTietSP = findViewById(R.id.txtMoTaChiTietSP);
         imgChiTietSP = findViewById(R.id.imgChiTietSP);
         btnThemVaoGioHang = findViewById(R.id.btnThemVaoGioHang);
         spinner = findViewById(R.id.spinner);
-        frameLayoutGioHang = findViewById(R.id.frameLayoutGioHang);
-        loai = getIntent().getIntExtra("loai", 0);
 
-        notificationBadge = findViewById(R.id.menuSoLuong);
+
+//        loai = getIntent().getIntExtra("loai", 0);
 
     }
 

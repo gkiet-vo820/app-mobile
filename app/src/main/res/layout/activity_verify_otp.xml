@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.VerifyOtpActivity">
+
+    <TextView
+        android:id="@+id/txtNhapMaOTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="NHẬP MÃ OTP"
+        android:textStyle="bold"
+        android:textSize="26sp"
+        android:textColor="#74b9ff"
+        android:gravity="center"
+        android:padding="5dp"
+        android:layout_marginTop="10dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/line1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/txtNhapMaOTP"
+        android:layout_marginTop="10dp"
+        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/edtMaOTP"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Nhập mã OTP (6 số)"
+            android:inputType="number"
+            android:maxLength="6"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"/>
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btnXacNhanMaOTP"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/line1"
+        android:text="XÁC NHẬN MÃ OTP"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:background="#81ecec"
+        android:textColor="@color/white"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp" />
+    <LinearLayout
+        android:id="@+id/line3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/btnXacNhanMaOTP"
+        android:gravity="center"
+        android:layout_marginTop="15dp">
+
+        <TextView
+            android:id="@+id/txtQuayLai"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quaylai"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#74b9ff"
+            android:padding="10dp"
+            android:layout_marginLeft="30dp"/>
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="15dp"
+            android:background="#74b9ff"
+            android:layout_gravity="center_vertical"/>
+
+        <TextView
+            android:id="@+id/txtQuayLaiDangNhap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/quaylaidangnhap"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:textColor="#74b9ff"
+            android:padding="10dp"/>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
