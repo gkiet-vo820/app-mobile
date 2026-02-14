@@ -5,7 +5,8 @@ import android.widget.Toast;
 
 import com.example.appbanhang.adapter.MenuAdapter;
 import com.example.appbanhang.model.Menu;
-import com.example.appbanhang.util.GetApi;
+import com.example.appbanhang.listener.GetApi;
+import com.example.appbanhang.service.RetrofitClient;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ public class MenuService {
     private GetApi getApi;
     private Context context;
     private MenuAdapter adapter;
+
     private List<Menu> dsMenu;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
@@ -44,6 +46,7 @@ public class MenuService {
                         )
         );
     }
+
     public void clear() {
         compositeDisposable.clear();
     }

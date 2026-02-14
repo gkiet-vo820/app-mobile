@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
 import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.model.Product;
 import com.example.appbanhang.util.Configure;
 
@@ -53,6 +54,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
 
             imgNew = itemView.findViewById(R.id.imgNew);
             imgHot = itemView.findViewById(R.id.imgHot);
+
         }
 
         public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -89,7 +91,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
         String hinhAnhSp = product.getHinhanh();
         String fullImageUrl = "";
 
-        if (hinhAnhSp != null) {
+        if (hinhAnhSp != null ) {
             if (hinhAnhSp.contains("http")) {
                 fullImageUrl = hinhAnhSp;
             } else {
@@ -123,6 +125,4 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.MyViewHo
     public int getItemCount() {
         return dsProduct.size();
     }
-
-
 }

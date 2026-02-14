@@ -1,10 +1,10 @@
 package com.example.appbanhang.adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.model.Menu;
 
 import java.util.List;
@@ -21,6 +22,7 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     Context context;
     private List<Menu> dsMenu;
     boolean isDrawer;
+    int selectedPosition = -1;
 
     private ItemClickListener itemClickListener;
     public MenuAdapter(Context context, List<Menu> dsMenu, boolean isDrawer){
@@ -30,6 +32,28 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
     }
     public void setItemClickListener(ItemClickListener itemClickListener){
         this.itemClickListener = itemClickListener;
+    }
+
+    public void setSelectedPosition(int newPosition){
+//        if(selectedPosition == newPosition)
+//            return;
+//
+//        int position = selectedPosition;
+//        selectedPosition = newPosition;
+//        notifyItemChanged(position);
+//        notifyItemChanged(selectedPosition);
+
+        // Lưu lại vị trí cũ để xóa highlight
+        int oldPosition = selectedPosition;
+        selectedPosition = newPosition;
+
+        // Thông báo cho Recycler View vẽ lại 2 vị trí bị thay đổi
+        notifyItemChanged(oldPosition);
+        notifyItemChanged(selectedPosition);
+    }
+
+    public int getSelectedPosition() {
+        return selectedPosition;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -62,9 +86,22 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.MyViewHolder> 
         holder.txtTenMenu.setText(menu.getName());
         Glide.with(context).load(menu.getImage()).into(holder.imgHinhAnh);
 
-        holder.itemView.setOnClickListener(v -> {
-            if (itemClickListener != null) {
-                itemClickListener.onClick(v, position, false);
+        if(position == selectedPosition){
+            holder.itemView.setBackgroundColor(Color.parseColor("#e0e0e0"));
+            holder.txtTenMenu.setTextColor(Color.parseColor("#0091ea"));
+        } else {
+            holder.itemView.setBackgroundColor(Color.TRANSPARENT);
+            holder.txtTenMenu.setTextColor(Color.BLACK);
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int currentPosition = holder.getAdapterPosition();
+                setSelectedPosition(currentPosition);
+                if (itemClickListener != null) {
+                    itemClickListener.onClick(v, currentPosition, false);
+                }
             }
         });
     }

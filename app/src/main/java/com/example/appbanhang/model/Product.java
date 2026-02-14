@@ -20,7 +20,6 @@ public class Product implements Serializable {
     private String ngaytao;
     @SerializedName("soldQuantity")
     private int soluongban;
-
     @SerializedName("stockQuantity")
     private int soluongtonkho;
 

@@ -12,22 +12,28 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.model.Orders;
+import com.example.appbanhang.util.Utils;
 
 import java.util.List;
 
 public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-    private RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
+    RecyclerView.RecycledViewPool viewPool = new RecyclerView.RecycledViewPool();
     Context context;
     List<Orders> dsOrders;
-
     private static final int VIEW_TYPE_DATA = 0;
     private static final int VIEW_TYPE_LOADING = 1;
+    private ItemClickListener itemClickListener;
 
     public OrdersAdapter(Context context, List<Orders> dsOrders) {
         this.context = context;
         this.dsOrders = dsOrders;
+    }
+
+    public void setItemClickListener(ItemClickListener itemClickListener) {
+        this.itemClickListener = itemClickListener;
     }
 
     @Override
@@ -43,12 +49,13 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
         }
     }
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView txtMaDonHang;
+        TextView txtMaDonHang, txtTinhTrangDonHang;
         RecyclerView recyclerViewDonHang;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txtMaDonHang = itemView.findViewById(R.id.txtMaDonHang);
+            txtTinhTrangDonHang = itemView.findViewById(R.id.txtTinhTrangDonHang);
             recyclerViewDonHang = itemView.findViewById(R.id.recyclerViewDonHang);
         }
     }
@@ -72,15 +79,30 @@ public class OrdersAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>
             MyViewHolder myHolder = (MyViewHolder) holder;
             Orders orders = dsOrders.get(position);
             myHolder.txtMaDonHang.setText("Đơn hàng: " + orders.getId());
+
+            Utils.setStatus(myHolder.txtTinhTrangDonHang, orders.getStatus());
+            myHolder.txtTinhTrangDonHang.setEnabled(false);
+
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(myHolder.recyclerViewDonHang.getContext(),
-                                                                            LinearLayoutManager.VERTICAL, false);
+                    LinearLayoutManager.VERTICAL, false);
             linearLayoutManager.setInitialPrefetchItemCount(orders.getDetailOrders().size());
 
-            DetailOrdersAdapter detailOrdersAdapter = new DetailOrdersAdapter(context, orders.getDetailOrders());
+            OrdersDetailAdapter ordersDetailAdapter = new OrdersDetailAdapter(context, orders.getDetailOrders());
             myHolder.recyclerViewDonHang.setLayoutManager(linearLayoutManager);
             myHolder.recyclerViewDonHang.setNestedScrollingEnabled(false);
-            myHolder.recyclerViewDonHang.setAdapter(detailOrdersAdapter);
+            myHolder.recyclerViewDonHang.setAdapter(ordersDetailAdapter);
             myHolder.recyclerViewDonHang.setRecycledViewPool(viewPool);
+
+            myHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int currentPositon = myHolder.getAdapterPosition();
+                    if(itemClickListener != null){
+                        itemClickListener.onClick(v, currentPositon, false);
+                    }
+                }
+            });
+
         }
         else {
             LoadingViewHolder loadingHolder = (LoadingViewHolder) holder;

@@ -7,6 +7,7 @@ import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.activity.authentication.LoginActivity;
 
 import io.paperdb.Paper;
 

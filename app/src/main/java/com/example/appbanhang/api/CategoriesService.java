@@ -4,8 +4,8 @@ import android.content.Context;
 import android.widget.Toast;
 
 import com.example.appbanhang.adapter.CategoriesAdapter;
-import com.example.appbanhang.model.Categories;
-import com.example.appbanhang.util.GetApi;
+import com.example.appbanhang.listener.GetApi;
+import com.example.appbanhang.service.RetrofitClient;
 
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.disposables.CompositeDisposable;

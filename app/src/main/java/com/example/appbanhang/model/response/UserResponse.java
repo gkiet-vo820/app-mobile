@@ -2,10 +2,13 @@ package com.example.appbanhang.model.response;
 
 import com.example.appbanhang.model.User;
 
+import java.util.List;
+
 public class UserResponse {
     private boolean success;
     private String message;
     private User user;
+    private List<User> data;
 
     public boolean isSuccess() {
         return success;
@@ -29,5 +32,13 @@ public class UserResponse {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<User> getData() {
+        return data;
+    }
+
+    public void setData(List<User> data) {
+        this.data = data;
     }
 }

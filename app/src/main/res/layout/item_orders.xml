@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <TextView
                 android:id="@+id/txtMaDonHang"
                 android:layout_width="match_parent"
@@ -25,6 +26,16 @@
                 android:textSize="20sp"
                 android:layout_marginLeft="10dp"
                 android:padding="5dp"/>
+            <TextView
+                android:id="@+id/txtTinhTrangDonHang"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tình trạng đơn hàng: Đã giao thành công"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:layout_marginLeft="10dp"
+                android:padding="5dp"/>
+
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewDonHang"

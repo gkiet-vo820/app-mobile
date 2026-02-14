@@ -1,5 +1,6 @@
 package com.example.appbanhang.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
@@ -26,11 +27,9 @@ import java.util.List;
 
 public class OrdersActivity extends AppCompatActivity {
 
-    Toolbar toolbarDonHang;
-    RecyclerView recyclerViewDonHang;
-
+    Toolbar toolbarLichSuDatHang;
+    RecyclerView recyclerViewLichSuDatHang;
     LinearLayoutManager linearLayoutManager;
-
     OrdersService ordersService;
     OrdersAdapter ordersAdapter;
     List<Orders> dsOrders;
@@ -63,9 +62,10 @@ public class OrdersActivity extends AppCompatActivity {
         }
     }
     private void ActionBar() {
-        setSupportActionBar(toolbarDonHang);
+        setSupportActionBar(toolbarLichSuDatHang);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        toolbarDonHang.setNavigationOnClickListener(new View.OnClickListener() {
+
+        toolbarLichSuDatHang.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -74,19 +74,19 @@ public class OrdersActivity extends AppCompatActivity {
     }
 
     private void addControls(){
-        toolbarDonHang = findViewById(R.id.toolbarDonHang);
-        recyclerViewDonHang = findViewById(R.id.recyclerViewDonHang);
+        toolbarLichSuDatHang = findViewById(R.id.toolbarLichSuDatHang);
+        recyclerViewLichSuDatHang = findViewById(R.id.recyclerViewLichSuDatHang);
 
         dsOrders = new ArrayList<>();
         ordersAdapter = new OrdersAdapter(this, dsOrders);
         linearLayoutManager = new LinearLayoutManager(this);
-        recyclerViewDonHang.setLayoutManager(linearLayoutManager);
-        recyclerViewDonHang.setAdapter(ordersAdapter);
+        recyclerViewLichSuDatHang.setLayoutManager(linearLayoutManager);
+        recyclerViewLichSuDatHang.setAdapter(ordersAdapter);
         ordersService = new OrdersService(this, ordersAdapter, dsOrders);
     }
 
     private void addEvents(){
-        recyclerViewDonHang.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        recyclerViewLichSuDatHang.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -103,33 +103,72 @@ public class OrdersActivity extends AppCompatActivity {
                 }
             }
         });
+
+        ordersAdapter.setItemClickListener((view, position, isLongClick) -> {
+            Orders orders = dsOrders.get(position);
+            if(orders != null){
+                Intent intent = new Intent(OrdersActivity.this, OrderDetailActivity.class);
+                intent.putExtra("order_id", orders.getId());
+                startActivity(intent);
+            }
+        });
     }
-    private void loadMore(){
+    private void loadMore() {
         dsOrders.add(null);
         ordersAdapter.notifyItemInserted(dsOrders.size() - 1);
         page++;
 
-        ordersService.loadOrderHistory(userId, page, limit, (tp, count) -> {
-            totalPage = tp;
-            if (page >= totalPage) {
-                isLastPage = true;
+        ordersService.loadOrderHistory(userId, page, limit, new OrdersService.PageCallback() {
+            @Override
+            public void onResult(int tp, int count) {
+                totalPage = tp;
+                if (page >= totalPage) {
+                    isLastPage = true;
+                }
+                isLoading = false;
             }
-            isLoading = false;
+
+            @Override
+            public void onError(String message) {
+                isLoading = false;
+                Toast.makeText(OrdersActivity.this, message, Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
-    private void showListDonHang(int userId){
+    private void showListDonHang(int userId) {
         page = 1;
         isLastPage = false;
-        isLoading = false;
+        isLoading = true;
         dsOrders.clear();
-        ordersService.loadOrderHistory(userId, page, limit, (tp, count) -> {
-            totalPage = tp;
-            if (totalPage <= 1) {
-                isLastPage = true;
+        ordersAdapter.notifyDataSetChanged();
+
+        ordersService.loadOrderHistory(userId, page, limit, new OrdersService.PageCallback() {
+            @Override
+            public void onResult(int tp, int count) {
+//                    totalPage = tp;
+//                    isLoading = false;
+//                    if (totalPage <= 1) {
+//                        isLastPage = true;
+//                    }
+                totalPage = tp;
+                isLoading = false;
+                if (page >= totalPage) { // Dùng >= cho chắc chắn
+                    isLastPage = true;
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                isLoading = false;
+                // Nếu là trang 1 mà lỗi thì mới báo "Không có đơn hàng"
+                if (page == 1) {
+                    Toast.makeText(OrdersActivity.this, "Không thể tải danh sách đơn hàng", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }
+
     @Override
     protected void onDestroy() {
         if (ordersService != null) {

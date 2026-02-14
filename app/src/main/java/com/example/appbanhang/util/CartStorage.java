@@ -29,4 +29,11 @@ public class CartStorage {
                 new com.google.gson.reflect.TypeToken<List<ShoppingCart>>() {}.getType()
         );
     }
+
+    public static void clearCart(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences("CART_PREF", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(CART_KEY);
+        editor.apply();
+    }
 }

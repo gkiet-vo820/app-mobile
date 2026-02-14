@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
-import com.example.appbanhang.adapter.ItemClickListener;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.adapter.PhoneAdapter;
 import com.example.appbanhang.api.PhoneService;
 import com.example.appbanhang.model.Product;

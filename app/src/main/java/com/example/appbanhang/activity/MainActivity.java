@@ -1,15 +1,19 @@
 package com.example.appbanhang.activity;
 
+import android.app.AlertDialog;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ViewFlipper;
 
@@ -26,8 +30,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
+import com.example.appbanhang.activity.admin.ManagerActivity;
+import com.example.appbanhang.activity.authentication.LoginActivity;
+import com.example.appbanhang.activity.authentication.ProfileActivity;
 import com.example.appbanhang.adapter.CategoriesAdapter;
-import com.example.appbanhang.adapter.ItemClickListener;
+import com.example.appbanhang.api.NotificationService;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.adapter.MenuAdapter;
 import com.example.appbanhang.adapter.ProductAdapter;
 import com.example.appbanhang.api.CategoriesService;
@@ -41,10 +49,13 @@ import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.nex3z.notificationbadge.NotificationBadge;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import io.paperdb.Paper;
 
@@ -54,15 +65,12 @@ public class MainActivity extends AppCompatActivity {
     ViewFlipper viewFlipper;
     RecyclerView recyclerViewManHinhChinh, recyclerMenuManHinhChinh, recyclerViewDrawer;
     NavigationView navigaionView;
+
     AppCompatButton btnTatCaSanPham, btnSanPhamMoiNhat, btnSanPhamBanChay;
 
     CategoriesAdapter categoriesAdapter;
     List<Categories> dsCategories;
     CategoriesService categoriesService;
-
-
-    BottomSheetDialog bottomSheetDialog;
-    ListView listViewSheetCategories;
 
     MenuAdapter menuAdapter, drawerAdapter;
     List<Menu> dsMenu, dsDrawerMenu;
@@ -77,6 +85,15 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
 
+    boolean isDrawer = false;
+
+    View headerView;
+    TextView txtName, txtEmail;
+    ImageView imgAvatar;
+
+    NotificationService notificationService;
+    private static final int POS_TRANG_CHU = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -85,6 +102,9 @@ public class MainActivity extends AppCompatActivity {
 
         Paper.init(this);
         saveUserLogin();
+
+        createNotificationChannel();
+
         addControls();
         addEvents();
         ActionBar();
@@ -125,12 +145,25 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         toolbar.setNavigationIcon(R.drawable.ic_menu);
+
+        drawerLayout.addDrawerListener(new DrawerLayout.SimpleDrawerListener() {
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+                if (drawerAdapter != null) {
+                    drawerAdapter.setSelectedPosition(-1); // Reset khi đóng bằng bất kỳ cách nào
+                }
+            }
+        });
+
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
+
+
     }
 
     private void addControls(){
@@ -141,6 +174,12 @@ public class MainActivity extends AppCompatActivity {
         viewFlipper = findViewById(R.id.viewFlipper);
         recyclerViewManHinhChinh = findViewById(R.id.recyclerViewManHinhChinh);
         navigaionView = findViewById(R.id.navigaionView);
+
+//        listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
+//        dsCategories = new ArrayList<>();
+//        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
+//        listViewManHinhChinh.setAdapter(categoriesAdapter);
+//        categoriesService = new CategoriesService(this, categoriesAdapter);
 
         recyclerMenuManHinhChinh = findViewById(R.id.recyclerMenuManHinhChinh);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
@@ -153,21 +192,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewDrawer = findViewById(R.id.recyclerViewDrawer);
         recyclerViewDrawer.setLayoutManager(new LinearLayoutManager(this));
         dsDrawerMenu = new ArrayList<>();
-        setupStaticDrawerMenu();// Hàm tự tạo mục Đăng xuất/Admin
+        setupStaticDrawerMenu(); // Hàm tự tạo mục Đăng xuất/Admin
         drawerAdapter = new MenuAdapter(this, dsDrawerMenu, true);
         recyclerViewDrawer.setAdapter(drawerAdapter);
-
-        bottomSheetDialog = new BottomSheetDialog(this);
-        View view = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_categories, null);
-        bottomSheetDialog.setContentView(view);
-
-        listViewSheetCategories = view.findViewById(R.id.listViewSheetCategories);
-        dsCategories = new ArrayList<>();
-        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
-        listViewSheetCategories.setAdapter(categoriesAdapter);
-
-        categoriesService = new CategoriesService(this, categoriesAdapter);
-        categoriesService.getAllCategories();
 
         dsProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(this, dsProduct);
@@ -184,11 +211,76 @@ public class MainActivity extends AppCompatActivity {
 
         searchView = findViewById(R.id.searchView);
         countTotalItem();
+
+
+        // Ánh xạ Header View
+        headerView = navigaionView.getHeaderView(0);
+        txtName = headerView.findViewById(R.id.txtUserDisplayName);
+        txtEmail = headerView.findViewById(R.id.txtUserEmail);
+        imgAvatar = headerView.findViewById(R.id.imgAvatar);
+
+
+        // Đổ dữ liệu từ Utils vào Header
+        if (Utils.user_current != null) {
+            txtName.setText(Utils.user_current.getUsername());
+            txtEmail.setText(Utils.user_current.getEmail());
+            // Nếu có link ảnh: Glide.with(this).load(Utils.user_current.getAvatar()).into(imgAvatar);
+        } else {
+            txtName.setText("Chưa đăng nhập");
+            txtEmail.setText("Bấm để đăng nhập ngay");
+            headerView.setOnClickListener(v -> {
+                startActivity(new Intent(this, LoginActivity.class));
+            });
+        }
+
+
+        notificationService = new NotificationService(this);
+        getTokenFCM();
+
     }
 
+    private void getTokenFCM(){
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        android.util.Log.w("FCM_TOKEN", "Lấy Token thất bại", task.getException());
+                        return;
+                    }
+
+                    // Đây là mã Token bạn cần để gửi tin nhắn
+                    String token = task.getResult();
+                    android.util.Log.d("FCM_TOKEN", "Token của thiết bị là: " + token);
+
+                    if(Utils.user_current != null){
+                        notificationService.updateToken(Utils.user_current.getEmail(), token);
+                    }
+                });
+    }
+
+    private void sendTokenToServer(String token){
+        Map<String, String> data = new HashMap<>();
+        data.put("email", Utils.user_current.getEmail());
+        data.put("token", token);
+    }
+
+    private void createNotificationChannel(){
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            String channelId = "app_ban_hang";
+            CharSequence name = "Thông báo đơn hàng";
+            String description = "Nhận thông báo về trạng thái đơn hàng của bạn";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel notificationChannel = new NotificationChannel(channelId, name, importance);
+            notificationChannel.setDescription(description);
+
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            if(notificationManager != null){
+                notificationManager.createNotificationChannel(notificationChannel);
+            }
+        }
+    }
     private void setupStaticDrawerMenu() {
         dsDrawerMenu.clear();
-        // Kiểm tra role từ bảng User
         if(Utils.user_current != null){
             dsDrawerMenu.add(new Menu("Thông tin cá nhân", ""));
             dsDrawerMenu.add(new Menu("Lịch sử mua hàng", ""));
@@ -219,18 +311,30 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                String action = dsDrawerMenu.get(position).getName();
+                if (drawerAdapter != null) {
+                    drawerAdapter.setSelectedPosition(-1);
+                }
 
+                String action = dsDrawerMenu.get(position).getName();
                 switch (action) {
                     case "Đăng xuất":
-                        Paper.book().delete("user");
-                        Utils.user_current = null;
-                        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
-                        startActivity(logout);
-                        finish();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Xác nhận");
+                        builder.setMessage("Bạn có muốn đăng xuất khỏi tài khoản?");
+                        builder.setPositiveButton("Đồng ý", (dialog, which) -> {
+                            Paper.book().delete("user");
+                            Utils.user_current = null;
+
+                            Intent logout = new Intent(MainActivity.this, LoginActivity.class);
+                            startActivity(logout);
+                            finish();
+                        });
+                        builder.setNegativeButton("Hủy", null);
+                        builder.show();
                         break;
                     case "Quản lý hệ thống":
-                        startActivity(new Intent(MainActivity.this, ManagerActivity.class));
+                        Intent manager = new Intent(MainActivity.this, ManagerActivity.class);
+                        startActivity(manager);
                         break;
                     case "Lịch sử mua hàng":
                         if (Utils.user_current != null) {
@@ -242,56 +346,63 @@ public class MainActivity extends AppCompatActivity {
                         }
                         break;
                     case "Thông tin cá nhân":
-                        // Chuyển sang ProfileActivity nếu có
+                        Intent profile = new Intent(MainActivity.this, ProfileActivity.class);
+                        startActivity(profile);
                         break;
                 }
-                drawerLayout.closeDrawer(GravityCompat.START);
+                drawerLayout.closeDrawer(GravityCompat.START); //Sau khi click xong thì đóng Drawer
+                // Reset ngay lập tức để lần sau mở ra không bị xanh
+                drawerAdapter.setSelectedPosition(-1);
             }
         });
 
         menuAdapter.setItemClickListener(new ItemClickListener() {
             @Override
             public void onClick(View view, int position, boolean isLongClick) {
-                String tenMenu = dsMenu.get(position).getName();
-                if (tenMenu.equalsIgnoreCase("Danh mục")) {
-                    openCategoryDialog();
-                } else if (tenMenu.equalsIgnoreCase("Trang chủ")) {
+                // CẬP NHẬT HIGHLIGHT CHO CHÍNH NÓ
+                menuAdapter.setSelectedPosition(position);
+
+                // Reset Drawer để không bị xanh cùng lúc
+                drawerAdapter.setSelectedPosition(-1);
+
+                String tenMenu = dsMenu.get(position).getName(); // Lấy name từ bảng menu
+                if (tenMenu.equalsIgnoreCase("Trang chủ")) {
                     showListSanPham();
+                    showListMenu();
+                    drawerLayout.closeDrawer(GravityCompat.START);
                     setActiveButton(btnTatCaSanPham);
+                } else if (tenMenu.equalsIgnoreCase("Danh mục")) {
+                    openCategoryDialog();
+                } else if (tenMenu.equalsIgnoreCase("Đơn hàng")) {
+                    if (Utils.user_current == null) {
+                        Toast.makeText(MainActivity.this, "Bạn cần đăng nhập để xem đơn hàng", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    Integer idDonHangMoi = Paper.book().read("last_order_id", 0);
+                    if(idDonHangMoi != null && idDonHangMoi > 0){
+                        Intent intent = new Intent(MainActivity.this, OrderDetailActivity.class);
+                        intent.putExtra("order_id", idDonHangMoi);
+                        startActivity(intent);
+                    } else {
+                        if(Utils.user_current != null){
+                            Intent intent = new Intent(MainActivity.this, OrdersActivity.class);
+                            intent.putExtra("id", Utils.user_current.getId());
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(MainActivity.this, "Bạn chưa đăng nhập!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                } else if (tenMenu.equalsIgnoreCase("Thông báo")) {
+                    Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+                    startActivity(intent);
+                } else if (tenMenu.equalsIgnoreCase("Tin nhắn")) {
+                    Intent intent = new Intent(MainActivity.this, ChatActivity.class);
+                    startActivity(intent);
+
                 }
             }
         });
-
-//        menuAdapter.setItemClickListener(new ItemClickListener() {
-//            @Override
-//            public void onClick(View view, int position, boolean isLongClick) {
-//                switch (position) {
-//                    case 0:
-//                        showListCategories();
-//                        showListMenu();
-//                        showListSanPham();
-//                        drawerLayout.closeDrawer(GravityCompat.START);
-//                        break;
-//                    case 2:
-//                        if (Utils.user_current != null) {
-//                            Intent order = new Intent(MainActivity.this, OrdersActivity.class);
-//                            order.putExtra("id", Utils.user_current.getId());
-//                            startActivity(order);
-//                        } else {
-//                            Toast.makeText(MainActivity.this, "Vui lòng đăng nhập!", Toast.LENGTH_SHORT).show();
-//                        }
-//                        drawerLayout.closeDrawer(GravityCompat.START);
-//                        break;
-//
-//                    case 4:
-//                        Paper.book().delete("user");
-//                        Intent logout = new Intent(MainActivity.this, LoginActivity.class);
-//                        startActivity(logout);
-//                        finish();
-//                        break;
-//                }
-//            }
-//        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -351,43 +462,91 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    private void openCategoryDialog() {
-        if (dsCategories == null || dsCategories.isEmpty()) {
-            Toast.makeText(this, "Đang tải danh mục, vui lòng đợi...", Toast.LENGTH_SHORT).show();
-            categoriesService.getAllCategories();
-            return;
+    @Override
+    public void onBackPressed() {
+        // 1. Nếu Drawer đang mở thì đóng Drawer trước
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            // 2. Nếu không ở trang chủ, nhấn back sẽ quay về highlight Trang chủ (vị trí 0)
+            if (menuAdapter.getSelectedPosition() != POS_TRANG_CHU) {
+                menuAdapter.setSelectedPosition(POS_TRANG_CHU);
+
+                // Thực hiện quay về logic hiển thị trang chủ
+                showListSanPham();
+                setActiveButton(btnTatCaSanPham);
+
+                Toast.makeText(this, "Quay lại Trang chủ", Toast.LENGTH_SHORT).show();
+            } else {
+                // 3. Nếu đã ở trang chủ thì mới thoát App
+                super.onBackPressed();
+            }
         }
-        listViewSheetCategories.setOnItemClickListener((parent, view1, position, id) -> {
+    }
+
+    private void openCategoryDialog() {
+        BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(this);
+        View view = getLayoutInflater().inflate(R.layout.layout_bottom_sheet_categories, null);
+        bottomSheetDialog.setContentView(view);
+
+        ListView lv = view.findViewById(R.id.lvSheetCategories);
+        dsCategories = new ArrayList<>();
+        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
+        lv.setAdapter(categoriesAdapter);
+
+        // Gọi CategoriesService để load dữ liệu từ MySQL
+        categoriesService = new CategoriesService(this, categoriesAdapter);
+        categoriesService.getAllCategories();
+
+        lv.setOnItemClickListener((parent, view1, position, id) -> {
             int maLoai = dsCategories.get(position).getId();
             String tenLoai = dsCategories.get(position).getTenLoai();
             Intent intent = null;
-            switch (maLoai) {
-                case 1:
-                    intent = new Intent(MainActivity.this, PhoneActivity.class);
-                    break;
-                case 2:
-                    intent = new Intent(MainActivity.this, TabletActivity.class);
-                    break;
-                case 3:
-                    intent = new Intent(MainActivity.this, LaptopActivity.class);
-                    break;
-                default:
-                    Toast.makeText(MainActivity.this, "Vui lòng chọn các mục trên", Toast.LENGTH_SHORT).show();
-                    break;
+            if (tenLoai.equalsIgnoreCase("Điện thoại")) {
+                intent = new Intent(MainActivity.this, PhoneActivity.class);
+            } else if (tenLoai.equalsIgnoreCase("Laptop")) {
+                intent = new Intent(MainActivity.this, LaptopActivity.class);
             }
 
             if (intent != null) {
                 intent.putExtra("loai", maLoai);
-                intent.putExtra("tenloai", tenLoai);
                 startActivity(intent);
-                bottomSheetDialog.dismiss();
             } else {
-                Toast.makeText(MainActivity.this, "Danh mục " + tenLoai + " chưa có Activity xử lý!", Toast.LENGTH_SHORT).show();
+                // Nếu rơi vào đây (ví dụ loại "Đồng hồ"), app sẽ báo cho người dùng biết
+                Toast.makeText(MainActivity.this, "Sản phẩm " + tenLoai + " sẽ sớm ra mắt!", Toast.LENGTH_SHORT).show();
             }
+            bottomSheetDialog.dismiss();
+//            switch (position){
+//                case 0:
+//                    Intent dienthoai  = new Intent(MainActivity.this, PhoneActivity.class);
+//                    dienthoai.putExtra("loai", 1);
+//                    startActivity(dienthoai);
+//                    drawerLayout.closeDrawer(GravityCompat.START);
+//                    break;
+//                case 1:
+//
+//                    break;
+//                case 2:
+//                    Intent laptop  = new Intent(MainActivity.this,LaptopActivity.class);
+//                    laptop.putExtra("loai", 2);
+//                    startActivity(laptop);
+//                    drawerLayout.closeDrawer(GravityCompat.START);
+//                    break;
+//                case 3:
+//
+//                    break;
+//                case  4:
+//
+//                    break;
+//                default:
+//                    Toast.makeText(MainActivity.this, "Lỗi!!!", Toast.LENGTH_SHORT).show();
+//                    break;
+//            }
+//            bottomSheetDialog.dismiss();
         });
+
         bottomSheetDialog.show();
     }
-
     private void setActiveButton(Button button) {
         btnTatCaSanPham.setBackgroundResource(R.drawable.button_inactive);
         btnSanPhamMoiNhat.setBackgroundResource(R.drawable.button_inactive);
@@ -426,6 +585,19 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         countTotalItem();
+
+        if (menuAdapter != null) {
+            menuAdapter.setSelectedPosition(POS_TRANG_CHU); // POS_TRANG_CHU là 0
+            // Nếu bạn muốn mỗi lần quay về từ màn hình khác, nó phải highlight đúng trang chủ
+            // Kiểm tra xem hiện tại đang hiện cái gì, nếu là sản phẩm thì highlight vị trí 0
+            menuAdapter.notifyDataSetChanged();
+        }
+
+        // Cập nhật lại tên/email ở Header nếu người dùng vừa sửa ở trang Profile
+        if (Utils.user_current != null) {
+            txtName.setText(Utils.user_current.getUsername());
+            txtEmail.setText(Utils.user_current.getEmail());
+        }
     }
 
     @Override
@@ -434,5 +606,6 @@ public class MainActivity extends AppCompatActivity {
         if (categoriesService != null) categoriesService.clear();
         if (menuService != null) menuService.clear();
         if (productService != null) productService.clear();
+        if (notificationService != null) notificationService.clear();
     }
 }

@@ -45,7 +45,7 @@
                         android:layout_height="40dp"
                         android:layout_marginTop="18dp"
                         android:src="@drawable/baseline_shopping_cart_24" />
-                    </FrameLayout>
+                </FrameLayout>
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -124,15 +124,18 @@
 
         <com.google.android.material.navigation.NavigationView
             android:id="@+id/navigaionView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_gravity="start">
+            android:layout_gravity="start"
+            app:headerLayout="@layout/nav_header_main">
+
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerViewDrawer"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="10dp"/>
+                android:clipToPadding="false"
+                android:paddingTop="180dp" />
+
         </com.google.android.material.navigation.NavigationView>
     </androidx.drawerlayout.widget.DrawerLayout>
 
@@ -149,4 +152,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:scrollbars="none">
     </androidx.recyclerview.widget.RecyclerView>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

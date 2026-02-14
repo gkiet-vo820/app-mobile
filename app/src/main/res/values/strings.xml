@@ -1,15 +1,14 @@
 <resources>
     <string name="app_name">AppBanHang</string>
-    <string name="dangky"><u>Đăng ký</u></string>
 
+    <string name="dangky"><u>Đăng ký</u></string>
     <string name="hoantat"><u>Hoàn tất</u></string>
     <string name="chinhsua"><u>Chỉnh sửa</u></string>
 
     <string name="quaylai"><u>Quay lại</u></string>
     <string name="quaylaidangnhap"><u>Quay lại đăng nhập</u></string>
     <string name="quenmatkhau"><u>Quên mật khẩu?</u></string>
-
+    <string name="doimatkhau"><u>Đổi mật khẩu?</u></string>
     <string name="chontatca"><u>Chọn tất cả</u></string>
     <string name="xoatatca"><u>Xóa tất cả</u></string>
-
 </resources>

@@ -10,6 +10,15 @@ public class OrdersResponse {
     private int totalPages;
     private int currentPage;
     private List<Orders> data;
+    private int orderId;
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
+    }
 
     public boolean isSuccess() {
         return success;

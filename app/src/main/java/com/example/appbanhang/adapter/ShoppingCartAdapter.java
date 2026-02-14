@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
+import com.example.appbanhang.listener.ImageClickListener;
 import com.example.appbanhang.model.ShoppingCart;
 import com.example.appbanhang.model.eventbus.TotalEvent;
 import com.example.appbanhang.util.CartStorage;
@@ -83,13 +84,13 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
     }
     @NonNull
     @Override
-    public ShoppingCartAdapter.MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_shoppingcart, parent,  false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ShoppingCartAdapter.MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         ShoppingCart shoppingCart = shoppingCartList.get(position);
         holder.txtTenSp_GioHang.setText(shoppingCart.getTensp());
         holder.txtSoLuongSP_GioHang.setText(String.valueOf(shoppingCart.getSoluong()));
@@ -98,7 +99,8 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
 
         long tongTien = shoppingCart.getGiasp() * shoppingCart.getSoluong();
         holder.txtTenGiaSp2_GioHang.setText("Tổng tiền: " + decimalFormat.format(tongTien) + "Đ");
-        Glide.with(context).load(shoppingCart.getHinhsp()).into(holder.imgGioHang);
+
+
 
         String hinhAnhSp = shoppingCart.getHinhsp();
         String fullImageUrl = "";
@@ -111,6 +113,8 @@ public class ShoppingCartAdapter extends RecyclerView.Adapter<ShoppingCartAdapte
             }
         }
         Glide.with(context).load(fullImageUrl).into(holder.imgGioHang);
+//        Glide.with(context).load(shoppingCart.getHinhsp()).into(holder.imgGioHang);
+
 
         if (isEditMode) {
             holder.imgDelete.setVisibility(View.VISIBLE);

@@ -12,6 +12,10 @@ public class Orders implements Serializable {
     private int quantity;
     private long totalpayment;
     private List<DetailOrders> detailOrders;
+    private int status;
+    private String paymentMethod;
+    private String createdAt;
+
 
     public Orders() {
     }
@@ -72,11 +76,35 @@ public class Orders implements Serializable {
         this.totalpayment = totalpayment;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public List<DetailOrders> getDetailOrders() {
         return detailOrders;
     }
 
     public void setDetailOrders(List<DetailOrders> detailOrders) {
         this.detailOrders = detailOrders;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
     }
 }

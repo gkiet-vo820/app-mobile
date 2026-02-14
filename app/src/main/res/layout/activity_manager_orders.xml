@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true"
+    tools:context=".activity.admin.ManagerOrdersActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarQuanLyDonHang"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Quản lý đơn hàng"
+        android:background="#ff00dfff">
+    </androidx.appcompat.widget.Toolbar>
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayoutStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabMode="scrollable"
+        app:tabGravity="start"
+        android:background="#BDC5C7"
+        app:tabTextColor="@android:color/white"
+        app:tabSelectedTextColor="#000000">
+
+        <com.google.android.material.tabs.TabItem android:text="Tất cả" />
+        <com.google.android.material.tabs.TabItem android:text="Chờ thanh toán" />
+        <com.google.android.material.tabs.TabItem android:text="Đã thanh toán" />
+        <com.google.android.material.tabs.TabItem android:text="Chờ xử lý" />
+        <com.google.android.material.tabs.TabItem android:text="Đang giao" />
+        <com.google.android.material.tabs.TabItem android:text="Đã giao" />
+        <com.google.android.material.tabs.TabItem android:text="Đã hủy" />
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewQuanLyDonHang"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="8dp"
+        android:clipToPadding="false">
+    </androidx.recyclerview.widget.RecyclerView>
+
+</LinearLayout>

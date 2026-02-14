@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.LoginActivity">
+    tools:context=".activity.authentication.LoginActivity">
 
     <TextView
         android:id="@+id/txtDangNhap"
@@ -20,7 +20,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:layout_marginTop="10dp"/>
-    
+
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/line1"
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         app:layout_constraintTop_toBottomOf="@id/txtDangNhap"
         android:layout_marginTop="10dp"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-        
+
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/edtEmail"
             android:layout_width="match_parent"
@@ -45,6 +45,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/line1"
         android:layout_marginTop="5dp"
+        app:passwordToggleEnabled="true"
         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
 
         <com.google.android.material.textfield.TextInputEditText

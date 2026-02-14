@@ -6,12 +6,13 @@ public class User {
     private int id;
     private String email;
     private String password;
+    private String avatar;
     private String username;
     @SerializedName("numberphone")
     private String sdt;
-
-    private String avatar;
     private int role;
+    private String lastMessage;
+    private long timeStamp;
     public User() {
     }
 
@@ -39,6 +40,14 @@ public class User {
         this.password = password;
     }
 
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
+    }
+
     public String getUsername() {
         return username;
     }
@@ -51,14 +60,6 @@ public class User {
         return sdt;
     }
 
-    public String getAvatar() {
-        return avatar;
-    }
-
-    public void setAvatar(String avatar) {
-        this.avatar = avatar;
-    }
-
     public int getRole() {
         return role;
     }
@@ -69,5 +70,21 @@ public class User {
 
     public void setSdt(String sdt) {
         this.sdt = sdt;
+    }
+
+    public String getLastMessage() {
+        return lastMessage;
+    }
+
+    public void setLastMessage(String lastMessage) {
+        this.lastMessage = lastMessage;
+    }
+
+    public long getTimeStamp() {
+        return timeStamp;
+    }
+
+    public void setTimeStamp(long timeStamp) {
+        this.timeStamp = timeStamp;
     }
 }

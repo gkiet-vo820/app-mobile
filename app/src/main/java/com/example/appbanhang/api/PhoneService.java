@@ -7,7 +7,8 @@ import android.widget.Toast;
 
 import com.example.appbanhang.adapter.PhoneAdapter;
 import com.example.appbanhang.model.Product;
-import com.example.appbanhang.util.GetApi;
+import com.example.appbanhang.listener.GetApi;
+import com.example.appbanhang.service.RetrofitClient;
 
 import java.util.List;
 

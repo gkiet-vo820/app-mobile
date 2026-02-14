@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_low_stock"
+        android:title="Hàng sắp hết"
+        android:icon="@drawable/ic_warning"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/menu_all"
+        android:title="Tất cả"
+        app:showAsAction="never" />
+</menu>

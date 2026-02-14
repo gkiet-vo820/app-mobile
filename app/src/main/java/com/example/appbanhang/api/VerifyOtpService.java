@@ -4,8 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.example.appbanhang.activity.ResetPasswordActivity;
-import com.example.appbanhang.util.GetApi;
+import com.example.appbanhang.activity.authentication.ResetPasswordActivity;
+import com.example.appbanhang.listener.GetApi;
+import com.example.appbanhang.service.RetrofitClient;
 
 import java.util.HashMap;
 import java.util.Map;

@@ -1,0 +1,49 @@
+{
+  "project_info": {
+    "project_number": "1009954777775",
+    "firebase_url": "https://app-mobile-sells-device-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "app-mobile-sells-device",
+    "storage_bucket": "app-mobile-sells-device.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009954777775:android:c8ced9be9a47edd302425a",
+        "android_client_info": {
+          "package_name": "com.example.appbanhang"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFYBrE3hEtshw7CRja8OoFTHCy7fdU9hY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1009954777775:android:7a2d04b68606012e02425a",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAFYBrE3hEtshw7CRja8OoFTHCy7fdU9hY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

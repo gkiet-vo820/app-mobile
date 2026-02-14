@@ -1,7 +1,6 @@
 package com.example.appbanhang.adapter;
 
 import android.content.Context;
-import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
-import com.example.appbanhang.activity.DetailActivity;
+import com.example.appbanhang.listener.ItemClickListener;
 import com.example.appbanhang.model.Product;
 import com.example.appbanhang.util.Configure;
 

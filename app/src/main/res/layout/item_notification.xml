@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="15dp"
+    android:layout_marginBottom="5dp"
+    android:background="#ffffff">
+    <TextView
+        android:id="@+id/txtTieuDeThongBao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tiêu đề thông báo"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textSize="20sp"/>
+
+    <TextView
+        android:id="@+id/txtNoiDungThongBao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nội dung thông báo"
+        android:textColor="#444444"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"/>
+
+    <TextView
+        android:id="@+id/txtThoiGianThongBao"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="2026-05-20 10:30"
+        android:textSize="14sp"
+        android:textColor="#999999"
+        android:layout_marginTop="5dp"
+        android:gravity="end"/>
+</LinearLayout>

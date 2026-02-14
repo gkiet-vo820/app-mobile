@@ -5,8 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.Toolbar;
@@ -50,7 +53,38 @@ public class ShoppingCartActivity extends AppCompatActivity {
         ActionBar();
         totalPayment();
     }
+    private final ActivityResultLauncher<Intent> vnpayLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == RESULT_OK) {
+                    // Thanh toán thành công!
 
+                    // 2. Xóa dữ liệu tạm trong Utils
+                    if (Utils.dsShoppingCart != null) {
+                        Utils.dsShoppingCart.clear();
+                    }
+
+                    // 3. Xóa dữ liệu đã lưu trong máy
+                    CartStorage.clearCart(this);
+
+                    // 4. Cập nhật giao diện (vì dsShoppingCart đã clear nên adapter sẽ trống)
+                    if (shoppingCartAdapter != null) {
+                        shoppingCartAdapter.notifyDataSetChanged();
+                    }
+
+                    // 5. Tính lại tổng tiền (về 0) và check giỏ hàng trống
+                    totalPayment();
+                    checkEmptyCart();
+
+                    Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_LONG).show();
+
+                    // 6. Quay về trang chủ
+                    Intent intent = new Intent(this, MainActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }
+            }
+    );
 
     private void ActionBar() {
         setSupportActionBar(toolbarGioHang);
@@ -118,7 +152,7 @@ public class ShoppingCartActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(ShoppingCartActivity.this, PaymentActivity.class);
                 intent.putExtra("tongtien", tongtien);
-                startActivity(intent);
+                vnpayLauncher.launch(intent);
                 setActiveButton(btnMuaHang);
 
             }
@@ -172,8 +206,8 @@ public class ShoppingCartActivity extends AppCompatActivity {
                 tongtien += item.getGiasp() * item.getSoluong();
             }
         }
-            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
-            txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
+        DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+        txtTongTien.setText(decimalFormat.format(tongtien)+ "Đ");
     }
 
     private void setActiveButton(Button button) {
