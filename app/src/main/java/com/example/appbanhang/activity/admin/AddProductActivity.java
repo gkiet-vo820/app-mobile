@@ -20,7 +20,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.appbanhang.R;
-import com.example.appbanhang.api.ProductService;
 import com.example.appbanhang.api.admin.ManagerProductService;
 import com.example.appbanhang.model.Product;
 

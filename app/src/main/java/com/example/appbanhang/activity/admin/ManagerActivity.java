@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.admin.AdminProductAdapter;
-import com.example.appbanhang.api.ProductService;
 import com.example.appbanhang.api.admin.ManagerProductService;
 import com.example.appbanhang.model.Product;
 

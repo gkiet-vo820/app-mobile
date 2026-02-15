@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context=".activity.PaymentActivity">
+    tools:context=".activity.payment.PaymentActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarThanhToan"

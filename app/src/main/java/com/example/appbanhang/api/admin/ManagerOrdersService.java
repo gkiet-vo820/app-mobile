@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.appbanhang.adapter.admin.ManagerOrdersAdapter;
-import com.example.appbanhang.api.OrdersService;
+import com.example.appbanhang.api.order.OrdersService;
 import com.example.appbanhang.listener.GetApi;
 import com.example.appbanhang.model.Orders;
 import com.example.appbanhang.service.RetrofitClient;

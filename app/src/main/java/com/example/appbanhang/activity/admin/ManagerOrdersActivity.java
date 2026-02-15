@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.appbanhang.R;
 import com.example.appbanhang.adapter.admin.ManagerOrdersAdapter;
-import com.example.appbanhang.api.OrdersService;
+import com.example.appbanhang.api.order.OrdersService;
 import com.example.appbanhang.api.admin.ManagerOrdersService;
 import com.example.appbanhang.model.Orders;
 import com.google.android.material.tabs.TabLayout;

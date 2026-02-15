@@ -52,19 +52,19 @@
             android:name=".activity.admin.ManagerInventoryActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.ChatDetailActivity"
+            android:name=".activity.chat.ChatDetailActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.ChatActivity"
+            android:name=".activity.chat.ChatActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.VnpayActivity"
+            android:name=".activity.payment.VnpayActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.OrderDetailActivity"
+            android:name=".activity.order.OrderDetailActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.NotificationActivity"
+            android:name=".activity.notification.NotificationActivity"
             android:exported="true" />
         <activity
             android:name=".activity.admin.ManagerOrdersActivity"
@@ -88,10 +88,10 @@
             android:name=".activity.SearchActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.OrdersActivity"
+            android:name=".activity.order.OrdersActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.PaymentActivity"
+            android:name=".activity.payment.PaymentActivity"
             android:exported="true"
             android:launchMode="singleTask"
             android:windowSoftInputMode="adjustPan">
@@ -119,16 +119,16 @@
             android:name=".activity.authentication.RegisterActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.ShoppingCartActivity"
+            android:name=".activity.cart.ShoppingCartActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.DetailActivity"
+            android:name=".activity.product.DetailActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.LaptopActivity"
+            android:name=".activity.product.LaptopActivity"
             android:exported="true" />
         <activity
-            android:name=".activity.PhoneActivity"
+            android:name=".activity.product.PhoneActivity"
             android:exported="true" />
         <activity
             android:name=".activity.authentication.LoginActivity"

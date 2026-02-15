@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import com.example.appbanhang.R;
-import com.example.appbanhang.activity.OrderDetailActivity;
+import com.example.appbanhang.activity.order.OrderDetailActivity;
 import com.example.appbanhang.activity.admin.ManagerOrdersActivity;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;

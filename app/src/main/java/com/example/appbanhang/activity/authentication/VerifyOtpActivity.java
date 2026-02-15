@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.appbanhang.R;
-import com.example.appbanhang.api.VerifyOtpService;
+import com.example.appbanhang.api.authentication.VerifyOtpService;
 import com.google.android.material.textfield.TextInputEditText;
 
 public class VerifyOtpActivity extends AppCompatActivity {

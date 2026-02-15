@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context=".activity.VnpayActivity">
+    tools:context=".activity.payment.VnpayActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarVNPAY"
