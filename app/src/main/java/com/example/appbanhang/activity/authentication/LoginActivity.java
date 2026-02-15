@@ -2,6 +2,7 @@ package com.example.appbanhang.activity.authentication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -12,7 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.appbanhang.R;
+import com.example.appbanhang.activity.MainActivity;
 import com.example.appbanhang.api.authentication.LoginService;
+import com.example.appbanhang.model.User;
+import com.example.appbanhang.util.Utils;
 import com.google.android.material.textfield.TextInputEditText;
 
 import io.paperdb.Paper;
@@ -22,11 +26,16 @@ public class LoginActivity extends AppCompatActivity {
     TextInputEditText edtEmail, edtPassword;
     AppCompatButton btnDangNhap;
     LoginService loginService;
+    private boolean isLoggingIn = false;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        Paper.init(this);
+        loadSaveUser();
+
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_login);
 
@@ -43,7 +52,6 @@ public class LoginActivity extends AppCompatActivity {
         txtQuenMatKhau = findViewById(R.id.txtQuenMatKhau);
 
         loginService = new LoginService(this);
-        Paper.init(this);
     }
 
     private void addEvents(){
@@ -82,6 +90,8 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
     private void login(){
+        if (isLoggingIn) return; // Nếu đang login thì không cho bấm nữa
+        isLoggingIn = true;
         String email = edtEmail.getText().toString().trim();
         String password = edtPassword.getText().toString().trim();
 
@@ -98,6 +108,7 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         else {
+            Log.d("TEST_DATA", "Email: " + email + " | Pass: " + password);
             loginService.login(email, password);
         }
     }
@@ -106,6 +117,17 @@ public class LoginActivity extends AppCompatActivity {
         String savedEmail = Paper.book().read("email");
         if (savedEmail != null) {
             edtEmail.setText(savedEmail);
+        }
+    }
+
+    private void loadSaveUser(){
+        User savedUser = Paper.book().read("user");
+        if(savedUser != null){
+            Utils.user_current = savedUser;;
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+            finish();
+            return;
         }
     }
 

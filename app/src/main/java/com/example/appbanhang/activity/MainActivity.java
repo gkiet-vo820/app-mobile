@@ -53,12 +53,17 @@ import com.example.appbanhang.model.Categories;
 import com.example.appbanhang.model.Menu;
 import com.example.appbanhang.model.Product;
 import com.example.appbanhang.model.User;
+import com.example.appbanhang.model.eventbus.LogoutEvent;
 import com.example.appbanhang.util.CartStorage;
 import com.example.appbanhang.util.Utils;
 import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.nex3z.notificationbadge.NotificationBadge;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -331,6 +336,7 @@ public class MainActivity extends AppCompatActivity {
                         builder.setMessage("Bạn có muốn đăng xuất khỏi tài khoản?");
                         builder.setPositiveButton("Đồng ý", (dialog, which) -> {
                             Paper.book().delete("user");
+                            Paper.book().delete("token");
                             Utils.user_current = null;
 
                             Intent logout = new Intent(MainActivity.this, LoginActivity.class);
@@ -606,6 +612,36 @@ public class MainActivity extends AppCompatActivity {
             txtName.setText(Utils.user_current.getUsername());
             txtEmail.setText(Utils.user_current.getEmail());
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(!EventBus.getDefault().isRegistered(this)){
+            EventBus.getDefault().register(this);
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Đừng hủy register ở onDestroy, hãy làm ở onStop để đảm bảo an toàn
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
+    }
+
+    // Hàm này sẽ tự động chạy khi Retrofit bắn ra LogoutEvent
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onLogoutEvent(LogoutEvent event) {
+        // 1. Hiện thông báo
+        Toast.makeText(this, event.getMessage(), Toast.LENGTH_LONG).show();
+
+        // 2. Chuyển về màn hình Login
+        Intent intent = new Intent(this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override

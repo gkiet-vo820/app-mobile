@@ -38,6 +38,7 @@ public class LoginService {
                                         Paper.book().write("email", email);
                                         Utils.user_current = res.getUser();
                                         Paper.book().write("user", res.getUser());
+                                        Paper.book().write("token", res.getToken());
 
                                         Intent intent = new Intent(context, MainActivity.class);
                                         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

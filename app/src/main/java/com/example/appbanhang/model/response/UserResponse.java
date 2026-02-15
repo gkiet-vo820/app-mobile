@@ -9,6 +9,7 @@ public class UserResponse {
     private String message;
     private User user;
     private List<User> data;
+    private String token;
 
     public boolean isSuccess() {
         return success;
@@ -40,5 +41,13 @@ public class UserResponse {
 
     public void setData(List<User> data) {
         this.data = data;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 }

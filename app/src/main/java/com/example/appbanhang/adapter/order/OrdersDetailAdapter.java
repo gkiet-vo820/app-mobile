@@ -15,6 +15,7 @@ import com.example.appbanhang.R;
 import com.example.appbanhang.model.DetailOrders;
 import com.example.appbanhang.util.Configure;
 
+import java.text.DecimalFormat;
 import java.util.List;
 
 public class OrdersDetailAdapter extends RecyclerView.Adapter<OrdersDetailAdapter.MyViewHolder> {
@@ -36,13 +37,14 @@ public class OrdersDetailAdapter extends RecyclerView.Adapter<OrdersDetailAdapte
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder{
-        TextView txtTenDonHang, txtSoLuongDonHang;
+        TextView txtTenDonHang, txtSoLuongDonHang, txtGiaDonHang;
         ImageView imgDonHang;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             txtTenDonHang = itemView.findViewById(R.id.txtTenDonHang);
             txtSoLuongDonHang = itemView.findViewById(R.id.txtSoLuongDonHang);
+            txtGiaDonHang = itemView.findViewById(R.id.txtGiaDonHang);
             imgDonHang = itemView.findViewById(R.id.imgDonHang);
         }
     }
@@ -59,6 +61,8 @@ public class OrdersDetailAdapter extends RecyclerView.Adapter<OrdersDetailAdapte
         if(detailOrders.getProduct() != null){
             holder.txtTenDonHang.setText("Tên đơn hàng: " + detailOrders.getProduct().getTensp());
             holder.txtSoLuongDonHang.setText("Số lượng: " + detailOrders.getQuantity());
+            DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
+            holder.txtGiaDonHang.setText("Giá: " + decimalFormat.format(detailOrders.getPrice()) + "Đ");
             Glide.with(context).load(detailOrders.getProduct().getHinhanh()).into(holder.imgDonHang);
 
             String hinhAnhSp = detailOrders.getProduct().getHinhanh();

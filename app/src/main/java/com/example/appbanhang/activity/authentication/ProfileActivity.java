@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -109,10 +110,25 @@ public class ProfileActivity extends AppCompatActivity {
             String moi = edtPassMoi.getText().toString().trim();
             String reMoi = edtPassReMoi.getText().toString().trim();
 
+            if (cu.isEmpty()) {
+                edtPassCu.setError("Vui lòng nhập mật khẩu");
+                edtPassCu.requestFocus();
+                return;
+            } else if(moi.isEmpty()){
+                edtPassMoi.setError("Vui lòng nhập mật khẩu");
+                edtPassMoi.requestFocus();
+                return;
+            }
+            else if (!moi.matches("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&.,])[A-Za-z\\d@$!%*?&.,]{8,}$")) {
+                edtPassMoi.setError("Mật khẩu phải từ 8 ký tự trở lên, gồm chữ hoa, chữ thường, số và ký tự đặc biệt");
+                edtPassMoi.requestFocus();
+                return;
+            }
+
             if (moi.equals(reMoi)) {
                 changePasswordService.changePassword(Utils.user_current.getId(), cu, moi, dialog);
             } else {
-                android.widget.Toast.makeText(this, "Mật khẩu mới không khớp!", android.widget.Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Mật khẩu mới không khớp!", Toast.LENGTH_SHORT).show();
             }
         });
 
