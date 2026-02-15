@@ -1,4 +1,4 @@
-package com.example.appbanhang.activity;
+package com.example.appbanhang.activity.search;
 
 import android.content.Intent;
 import android.os.Bundle;

@@ -40,6 +40,7 @@ import com.example.appbanhang.activity.order.OrderDetailActivity;
 import com.example.appbanhang.activity.order.OrdersActivity;
 import com.example.appbanhang.activity.product.LaptopActivity;
 import com.example.appbanhang.activity.product.PhoneActivity;
+import com.example.appbanhang.activity.search.SearchActivity;
 import com.example.appbanhang.adapter.menu.CategoriesAdapter;
 import com.example.appbanhang.api.notification.NotificationService;
 import com.example.appbanhang.listener.ItemClickListener;

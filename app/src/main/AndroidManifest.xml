@@ -85,7 +85,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".activity.search.SearchActivity"
             android:exported="true" />
         <activity
             android:name=".activity.order.OrdersActivity"
