@@ -28,7 +28,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     Toolbar toolbarDonHang;
     RecyclerView recyclerViewDonHang;
-    TextView txtMaDonHang, txtTrangThaiDonHang, txtDiaChiDonHang, txtTongTienDonHang;
+    TextView txtMaDonHang, txtTrangThaiDonHang, txtDiaChiDonHang, txtTongTienDonHang, txtGhiChuHoanTien;;
     OrderDetailService orderDetailService;
     OrdersDetailAdapter ordersDetailAdapter;
     List<DetailOrders> dsDetailOrders;
@@ -68,6 +68,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         txtTrangThaiDonHang = findViewById(R.id.txtTrangThaiDonHang);
         txtDiaChiDonHang = findViewById(R.id.txtDiaChiDonHang);
         txtTongTienDonHang = findViewById(R.id.txtTongTienDonHang);
+        txtGhiChuHoanTien = findViewById(R.id.txtGhiChuHoanTien);
         btnChat = findViewById(R.id.btnChat);
 
         dsDetailOrders = new ArrayList<>();
@@ -99,6 +100,14 @@ public class OrderDetailActivity extends AppCompatActivity {
 
                 DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
                 txtTongTienDonHang.setText("Tổng tiền: " + decimalFormat.format(orders.getTotalpayment()) + "Đ");
+
+                if (orders.getStatus() == 5 && orders.getNote() != null && !orders.getNote().isEmpty()) {
+                    txtGhiChuHoanTien.setVisibility(View.VISIBLE);
+                    // Nếu note có chữ hoàn tiền thì dùng màu đỏ/vàng, còn không thì hiện ghi chú bình thường
+                    txtGhiChuHoanTien.setText("Ghi chú: " + orders.getNote());
+                } else {
+                    txtGhiChuHoanTien.setVisibility(View.GONE);
+                }
 
                 ordersDetailAdapter = new OrdersDetailAdapter(OrderDetailActivity.this, orders.getDetailOrders());
                 recyclerViewDonHang.setAdapter(ordersDetailAdapter);

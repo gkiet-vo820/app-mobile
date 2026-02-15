@@ -14,6 +14,7 @@ public class Orders implements Serializable {
     private List<DetailOrders> detailOrders;
     private int status;
     private String paymentMethod;
+    private String note;
     private String createdAt;
 
 
@@ -98,6 +99,14 @@ public class Orders implements Serializable {
 
     public void setPaymentMethod(String paymentMethod) {
         this.paymentMethod = paymentMethod;
+    }
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
     }
 
     public String getCreatedAt() {
