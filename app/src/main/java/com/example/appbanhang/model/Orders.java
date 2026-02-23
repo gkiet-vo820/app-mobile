@@ -7,6 +7,8 @@ public class Orders implements Serializable {
     private int id;
     private int userId;
     private String email;
+    private String username;
+
     private String numberphone;
     private String address;
     private int quantity;
@@ -43,6 +45,14 @@ public class Orders implements Serializable {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getNumberphone() {

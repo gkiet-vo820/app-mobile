@@ -53,20 +53,38 @@
                 android:visibility="gone" />
 
             <TextView
-                android:id="@+id/txtTrangThaiDonHang"
+                android:id="@+id/txtNguoiDat"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Trạng thái: "
+                android:text="Người đặt: "
                 android:textColor="#333333"
                 android:textSize="16sp"/>
 
+            <TextView
+                android:id="@+id/txtSDT"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="SĐT: "
+                android:inputType="phone"
+                android:textColor="#333333"
+                android:textSize="16sp"/>
             <TextView
                 android:id="@+id/txtDiaChiDonHang"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="Địa chỉ: "
+                android:textColor="#333333"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/txtTrangThaiDonHang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Trạng thái: "
                 android:textColor="#333333"
                 android:textSize="16sp"/>
 

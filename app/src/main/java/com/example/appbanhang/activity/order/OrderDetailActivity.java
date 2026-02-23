@@ -29,7 +29,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     Toolbar toolbarDonHang;
     RecyclerView recyclerViewDonHang;
-    TextView txtMaDonHang, txtTrangThaiDonHang, txtDiaChiDonHang, txtTongTienDonHang, txtGhiChuHoanTien;;
+    TextView txtMaDonHang, txtTrangThaiDonHang, txtNguoiDat, txtSDT, txtDiaChiDonHang, txtTongTienDonHang, txtGhiChuHoanTien;;
     OrderDetailService orderDetailService;
     OrdersDetailAdapter ordersDetailAdapter;
     List<DetailOrders> dsDetailOrders;
@@ -67,6 +67,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         recyclerViewDonHang = findViewById(R.id.recyclerViewDonHang);
         txtMaDonHang = findViewById(R.id.txtMaDonHang);
         txtTrangThaiDonHang = findViewById(R.id.txtTrangThaiDonHang);
+        txtNguoiDat = findViewById(R.id.txtNguoiDat);
+        txtSDT = findViewById(R.id.txtSDT);
         txtDiaChiDonHang = findViewById(R.id.txtDiaChiDonHang);
         txtTongTienDonHang = findViewById(R.id.txtTongTienDonHang);
         txtGhiChuHoanTien = findViewById(R.id.txtGhiChuHoanTien);
@@ -97,6 +99,9 @@ public class OrderDetailActivity extends AppCompatActivity {
                 txtMaDonHang.setText("Đơn hàng: #" + orders.getId());
 
                 Utils.setStatus(txtTrangThaiDonHang, orders.getStatus());
+
+                txtNguoiDat.setText("Người đặt: " + orders.getUsername());
+                txtSDT.setText("Số điện thoại: " + orders.getNumberphone());
                 txtDiaChiDonHang.setText("Địa chỉ: " + orders.getAddress());
 
                 DecimalFormat decimalFormat = new DecimalFormat("###,###,###");
