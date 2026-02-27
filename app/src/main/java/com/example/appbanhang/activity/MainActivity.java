@@ -98,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
 
-    boolean isDrawer = false;
-
     View headerView;
     TextView txtName, txtEmail;
     ImageView imgAvatar;
@@ -114,7 +112,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         Paper.init(this);
-        saveUserLogin();
+        autoLogin();
 
         createNotificationChannel();
 
@@ -127,13 +125,15 @@ public class MainActivity extends AppCompatActivity {
         showListSanPham();
     }
 
-    private void saveUserLogin(){
+    // tự động đăng nhập (mở lại app nếu tài khoản lưu rồi)
+    private void autoLogin(){
         if(Paper.book().read("user") != null){
             User user = Paper.book().read("user");
             Utils.user_current = user;
         }
     }
 
+    // các banner tự động chạy qua
     private void ActionViewFlipper() {
         List<String> advertise = new ArrayList<>();
         advertise.add("https://cdnv2.tgdd.vn/mwg-static/tgdd/Banner/b5/07/b507e2e48c5c06b20d947e5d20935739.jpg");
@@ -145,15 +145,15 @@ public class MainActivity extends AppCompatActivity {
             imageView.setScaleType(ImageView.ScaleType.FIT_XY);
             viewFlipper.addView(imageView);
         }
-        viewFlipper.setFlipInterval(3000);
+        viewFlipper.setFlipInterval(4000);
         viewFlipper.setAutoStart(true);
         Animation slide_in = AnimationUtils.loadAnimation(this,R.anim.slide_in_right);
         Animation slide_out = AnimationUtils.loadAnimation(this,R.anim.slide_out_right);
         viewFlipper.setInAnimation(slide_in);
         viewFlipper.setOutAnimation(slide_out);
-
     }
 
+    // thanh toolbar
     private void ActionBar() {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
             public void onDrawerClosed(View drawerView) {
                 super.onDrawerClosed(drawerView);
                 if (drawerAdapter != null) {
-                    drawerAdapter.setSelectedPosition(-1); // Reset khi đóng bằng bất kỳ cách nào
+                    drawerAdapter.setSelectedPosition(-1);
                 }
             }
         });
@@ -175,25 +175,19 @@ public class MainActivity extends AppCompatActivity {
                 drawerLayout.openDrawer(GravityCompat.START);
             }
         });
-
-
     }
 
     private void addControls(){
         checkCart();
 
+        // ánh xạ drawerlayout, viewflipper, toolbar
         drawerLayout = findViewById(R.id.drawerLayout);
         toolbar = findViewById(R.id.toolBarManHinhChinh);
         viewFlipper = findViewById(R.id.viewFlipper);
         recyclerViewManHinhChinh = findViewById(R.id.recyclerViewManHinhChinh);
         navigaionView = findViewById(R.id.navigaionView);
 
-//        listViewManHinhChinh = findViewById(R.id.listViewManHinhChinh);
-//        dsCategories = new ArrayList<>();
-//        categoriesAdapter = new CategoriesAdapter(this, dsCategories);
-//        listViewManHinhChinh.setAdapter(categoriesAdapter);
-//        categoriesService = new CategoriesService(this, categoriesAdapter);
-
+        // ánh xạ menu chính (bottom menu)
         recyclerMenuManHinhChinh = findViewById(R.id.recyclerMenuManHinhChinh);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerMenuManHinhChinh.setLayoutManager(linearLayoutManager);
@@ -202,6 +196,7 @@ public class MainActivity extends AppCompatActivity {
         recyclerMenuManHinhChinh.setAdapter(menuAdapter);
         menuService = new MenuService(this, menuAdapter, dsMenu);
 
+        // ánh xạ menu phụ (drawer trượt từ trái qua)
         recyclerViewDrawer = findViewById(R.id.recyclerViewDrawer);
         recyclerViewDrawer.setLayoutManager(new LinearLayoutManager(this));
         dsDrawerMenu = new ArrayList<>();
@@ -209,47 +204,54 @@ public class MainActivity extends AppCompatActivity {
         drawerAdapter = new MenuAdapter(this, dsDrawerMenu, true);
         recyclerViewDrawer.setAdapter(drawerAdapter);
 
+        // ánh xạ ds sản phẩm
         dsProduct = new ArrayList<>();
         productAdapter = new ProductAdapter(this, dsProduct);
         recyclerViewManHinhChinh.setLayoutManager(new GridLayoutManager(this,2));
         recyclerViewManHinhChinh.setAdapter(productAdapter);
         productService = new ProductService(this, productAdapter, dsProduct);
 
+        // ánh xạ các nút
         btnTatCaSanPham = findViewById(R.id.btnTatCaSanPham);
         btnSanPhamMoiNhat = findViewById(R.id.btnSanPhamMoiNhat);
         btnSanPhamBanChay = findViewById(R.id.btnSanPhamBanChay);
 
+        // ánh xạ thông báo (giỏ hàng)
         notificationBadge = findViewById(R.id.menuSoLuong);
         frameLayoutManHinhChinh = findViewById(R.id.frameLayoutManHinhChinh);
 
+        // ánh xạ thanh tìm kiếm
         searchView = findViewById(R.id.searchView);
         countTotalItem();
 
 
-        // Ánh xạ Header View
+        // ánh xạ headerview (header của drawer)
         headerView = navigaionView.getHeaderView(0);
         txtName = headerView.findViewById(R.id.txtUserDisplayName);
         txtEmail = headerView.findViewById(R.id.txtUserEmail);
         imgAvatar = headerView.findViewById(R.id.imgAvatar);
 
 
-        // Đổ dữ liệu từ Utils vào Header
+        // đổ dữ liệu từ Utils vào header (hiển thị thông tin user nếu đã đăng nhập)
         if (Utils.user_current != null) {
             txtName.setText(Utils.user_current.getUsername());
             txtEmail.setText(Utils.user_current.getEmail());
-            // Nếu có link ảnh: Glide.with(this).load(Utils.user_current.getAvatar()).into(imgAvatar);
+            Glide.with(this).load(Utils.user_current.getAvatar()).into(imgAvatar);
         } else {
             txtName.setText("Chưa đăng nhập");
             txtEmail.setText("Bấm để đăng nhập ngay");
-            headerView.setOnClickListener(v -> {
-                startActivity(new Intent(this, LoginActivity.class));
+            headerView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                    startActivity(intent);
+                }
             });
         }
 
-
+        // khởi tạo thông báo & lấy token FCM
         notificationService = new NotificationService(this);
         getTokenFCM();
-
     }
 
     private void getTokenFCM(){
@@ -260,7 +262,6 @@ public class MainActivity extends AppCompatActivity {
                         return;
                     }
 
-                    // Đây là mã Token bạn cần để gửi tin nhắn
                     String token = task.getResult();
                     android.util.Log.d("FCM_TOKEN", "Token của thiết bị là: " + token);
 
@@ -268,12 +269,6 @@ public class MainActivity extends AppCompatActivity {
                         notificationService.updateToken(Utils.user_current.getEmail(), token);
                     }
                 });
-    }
-
-    private void sendTokenToServer(String token){
-        Map<String, String> data = new HashMap<>();
-        data.put("email", Utils.user_current.getEmail());
-        data.put("token", token);
     }
 
     private void createNotificationChannel(){
@@ -530,33 +525,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, "Sản phẩm " + tenLoai + " sẽ sớm ra mắt!", Toast.LENGTH_SHORT).show();
             }
             bottomSheetDialog.dismiss();
-//            switch (position){
-//                case 0:
-//                    Intent dienthoai  = new Intent(MainActivity.this, PhoneActivity.class);
-//                    dienthoai.putExtra("loai", 1);
-//                    startActivity(dienthoai);
-//                    drawerLayout.closeDrawer(GravityCompat.START);
-//                    break;
-//                case 1:
-//
-//                    break;
-//                case 2:
-//                    Intent laptop  = new Intent(MainActivity.this,LaptopActivity.class);
-//                    laptop.putExtra("loai", 2);
-//                    startActivity(laptop);
-//                    drawerLayout.closeDrawer(GravityCompat.START);
-//                    break;
-//                case 3:
-//
-//                    break;
-//                case  4:
-//
-//                    break;
-//                default:
-//                    Toast.makeText(MainActivity.this, "Lỗi!!!", Toast.LENGTH_SHORT).show();
-//                    break;
-//            }
-//            bottomSheetDialog.dismiss();
         });
 
         bottomSheetDialog.show();
